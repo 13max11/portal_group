@@ -1,3 +1,3 @@
 # klass
 
-krito woobse
+kruto woobse
