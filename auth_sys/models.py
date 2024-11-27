@@ -10,6 +10,7 @@ class CustomUser(AbstractUser):
 
     avatar = models.ImageField(upload_to='images/avatars/', default='images/avatars/default.jpg')
     description = models.TextField(blank=True, null=True)
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
 
     def __str__(self) -> str:
         return self.username
