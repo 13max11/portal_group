@@ -1,11 +1,8 @@
 from auth_sys import views
 from django.urls import path
-
-# urlpatterns = [
-#     path('test', views.TestUsersView.as_view(), name='test'),
-# ]
+from django.contrib.auth.views import LoginView
 
 urlpatterns = [
-    path('register/', views.register_view, name='register'),
-    path('login/', views.login_view, name='login'),
+    path('register/', views.RegistationView.as_view(), name='register'),
+    path('login/', LoginView.as_view(template_name='auth_sys/login.html', redirect_authenticated_user = True), name='login'),
 ]
