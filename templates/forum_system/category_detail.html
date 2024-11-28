@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% block content %}
+
 <h1>{{ category.name }}</h1>
 <p>{{ category.description }}</p>
 
@@ -13,4 +15,5 @@
     <p>No topics found in this category.</p>
 {% endif %}
 
-<a href="{% url 'create-topic' category.id %}">Create New Topic</a>
+<a href="{% url 'create-topic' %}">Create New Topic</a>
+{% endblock %}

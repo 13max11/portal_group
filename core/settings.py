@@ -137,6 +137,7 @@ AUTH_USER_MODEL = 'auth_sys.CustomUser'
 
 LOGIN_REDIRECT_URL = '/'  # Сторінка після успішного входу
 LOGOUT_REDIRECT_URL = '/'  # Сторінка після виходу
+LOGOUT_REDIRECT_URL = '/'
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")

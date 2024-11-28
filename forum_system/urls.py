@@ -2,7 +2,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('category/<int:category_id>/', views.category_detail, name='category-detail'),
-    path('category/<int:category_id>/create-topic/', views.create_topic, name='create-topic'),
-    path('topic/<int:topic_id>/', views.topic_detail, name='topic-detail'),
+    path('category/', views.CategoryListView.as_view(), name='category'),
+    path('category/<int:pk>/', views.CategoryDetailView.as_view(), name='category-detail'),
+    path('create-topic/', views.TopicCreateView.as_view(), name='create-topic'),
+    path('topic/<int:pk>/', views.TopicDetailView.as_view(), name='topic-detail'),
 ]

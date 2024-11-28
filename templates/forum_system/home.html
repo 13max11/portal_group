@@ -1,10 +1,12 @@
 {% extends 'base.html' %}
 
+{% block content %}
 <h1>Forum Categories</h1>
 <ul>
     {% for category in categories %}
     <li>
-        <a href="{% url 'create-topic' category.id %}">{{ category.name }}</a>
+        <a href="{% url 'create-topic' %}">{{ category.name }}</a>
     </li>
     {% endfor %}
 </ul>
+{% endblock %}

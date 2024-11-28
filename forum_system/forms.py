@@ -7,9 +7,11 @@ class CategoryForm(forms.ModelForm):
         fields = ['name', 'description']
 
 class TopicForm(forms.ModelForm):
+    category = forms.ModelChoiceField(queryset=Category.objects.all(), required=True)
+
     class Meta:
         model = Topic
-        fields = ['title', 'content']
+        fields = ['category', 'title', 'content']
 
 class CommentForm(forms.ModelForm):
     class Meta:

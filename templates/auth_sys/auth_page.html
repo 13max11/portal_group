@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>auth page</h2>
+
+<a href="{% url 'login' %}">login</a>
+<a href="{% url 'register' %}">register</a>
+<a href="{% url 'logout' %}">logout</a>
+
+{% endblock %}

@@ -1,11 +1,14 @@
 from django.shortcuts import render, redirect
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, TemplateView
 from .models import CustomUser
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import CustomUserCreationForm
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.urls import reverse_lazy
+
+class AuthPageView(TemplateView):
+    template_name = 'auth_sys/auth_page.html'
 
 class RegistationView(CreateView):
     form_class = CustomUserCreationForm
@@ -16,3 +19,8 @@ class RegistationView(CreateView):
         user = form.save()
         login(self.request, user)
         return super().form_valid(form)
+
+def logout_view(request):
+    logout(request)
+    return redirect('/')
+

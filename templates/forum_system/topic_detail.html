@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
 
+
+{% block content %}
+
 <h1>{{ topic.title }}</h1>
-<p>{{ topic.content }}</p>
+<p>{{ topic.content|linebreaks }}</p>
 <p>Created by: {{ topic.created_by }}</p>
 <p>Likes: {{ likes_count }}</p>
 
@@ -20,7 +23,7 @@
 <ul>
     {% for comment in comments %}
         <li>
-            <strong>{{ comment.created_by }}:</strong> {{ comment.content }}
+            <strong>{{ comment.created_by.username }} {% if comment.created_by.pk == topic.created_by.pk %} [OP] {% endif %} :</strong> {{ comment.content }}
         </li>
     {% endfor %}
 </ul>
@@ -35,3 +38,4 @@
 <p>You must be logged in to comment.</p>
 {% endif %}
 <a href="{% url 'category-detail' topic.category.id %}">Back to Category</a>
+{% endblock %}
