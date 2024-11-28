@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+<h1>{{ category.name }}</h1>
+<p>{{ category.description }}</p>
+
+{% if topics %}
+    <ul>
+        {% for topic in topics %}
+            <li><a href="{% url 'topic-detail' topic.id %}">{{ topic.title }}</a></li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No topics found in this category.</p>
+{% endif %}
+
+<a href="{% url 'create-topic' category.id %}">Create New Topic</a>
