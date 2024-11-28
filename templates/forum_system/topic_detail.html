@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+<h1>{{ topic.title }}</h1>
+<p>{{ topic.content }}</p>
+<p>Created by: {{ topic.created_by }}</p>
+<p>Likes: {{ likes_count }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" name="like">
+        {% if request.user in topic.likes.all %}
+            Unlike
+        {% else %}
+            Like
+        {% endif %}
+    </button>
+</form>
+
+<h2>Comments</h2>
+<ul>
+    {% for comment in comments %}
+        <li>
+            <strong>{{ comment.created_by }}:</strong> {{ comment.content }}
+        </li>
+    {% endfor %}
+</ul>
+
+{% if request.user.is_authenticated %}
+<form method="post">
+    {% csrf_token %}
+    <textarea name="content" rows="3" required></textarea><br>
+    <button type="submit" name="comment">Add Comment</button>
+</form>
+{% else %}
+<p>You must be logged in to comment.</p>
+{% endif %}
+<a href="{% url 'category-detail' topic.category.id %}">Back to Category</a>

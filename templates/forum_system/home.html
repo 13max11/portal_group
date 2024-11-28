@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+<h1>Forum Categories</h1>
+<ul>
+    {% for category in categories %}
+    <li>
+        <a href="{% url 'create-topic' category.id %}">{{ category.name }}</a>
+    </li>
+    {% endfor %}
+</ul>

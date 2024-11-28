@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+<h1>Create a Topic in {{ category.name }}</h1>
+<form method="post">
+    {% csrf_token %}
+    <label for="title">Title:</label>
+    <input type="text" name="title" id="title" required><br>
+    <label for="content">Content:</label>
+    <textarea name="content" id="content" rows="5" required></textarea><br>
+    <button type="submit">Create Topic</button>
+</form>
+<a href="{% url 'category-detail' category.id %}">Back to Category</a>
