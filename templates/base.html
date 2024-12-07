@@ -8,26 +8,28 @@
 </head>
 <body>
     <div class="top-panel">
-        <form action="{% url 'index' %}">
-            <button type="submit" class="panel-button">Кнопка 1</button>
+        <form action="/">
+            <button type="submit" class="panel-button">Головна</button>
         </form>
-        <button class="panel-button">Кнопка 2</button>
+        <form action="forum/">
+            <button type="submit" class="panel-button">Форум</button>
+        </form>
         <div class="dropdown">
             <input type="checkbox" id="toggle" class="dropdown-toggle">
             <label for="toggle" class="panel-button dropdown-label">
-                Кнопка 3
+                Інше
                 <span class="arrow"></span>
             </label>
             <div class="dropdown-menu">
-                <button class="small-button">Головна</button>
-                <button class="small-button">Форум</button>
-                <button class="small-button">Додаткова 3</button>
+                <button class="small-button">Кнопка</button>
+                <button class="small-button">Кнопка</button>
+                <button class="small-button">Кнопка</button>
             </div>
         </div>
     </div>
     <div class="horizontal-line"></div>
 
-    <a href="{% url 'index' %}"><h1>Portal Group</h1></a>
+    <!-- <a href="{% url 'index' %}"><h1>Portal Group</h1></a> -->
     {% block content %}
     {% endblock %}
 </body>
