@@ -138,7 +138,22 @@ def index(request):
         else:
             form = CategoryForm()
 
-    return render(request, 'forum_system/index.html', {
+    return render(request, 'forum_system/index.html')
+
+def forum(request):
+    categories = Category.objects.all()
+    form = None
+
+    if request.user.is_staff:
+        if request.method == 'POST':
+            form = CategoryForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return redirect('forum')
+        else:
+            form = CategoryForm()
+
+    return render(request, 'forum_system/forum.html', {
         'categories': categories,
         'form': form
     })
