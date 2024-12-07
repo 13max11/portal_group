@@ -8,7 +8,7 @@ from django.http import HttpResponseForbidden
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, ListView, DetailView
 from django.urls import reverse_lazy
-from .forms import TopicForm
+from .forms import TopicForm, CategoryForm, Category
 
 
 '''@login_required
@@ -125,5 +125,20 @@ class CategoryListView(ListView):
     context_object_name = 'categorys'
 
 def index(request):
-    categories = Category.objects.all()  # Получаем все категории
-    return render(request, 'forum_system/index.html', {'categories': categories})
+    categories = Category.objects.all()
+    form = None
+
+    # Только администратор может видеть и использовать форму
+    if request.user.is_staff:
+        if request.method == 'POST':
+            form = CategoryForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return redirect('index')
+        else:
+            form = CategoryForm()
+
+    return render(request, 'forum_system/index.html', {
+        'categories': categories,
+        'form': form
+    })
