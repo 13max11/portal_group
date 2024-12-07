@@ -33,6 +33,10 @@
     {% csrf_token %}
     <textarea name="content" rows="3" required></textarea><br>
     <button type="submit" name="comment">Add Comment</button>
+    {% if request.user == topic.created_by %}
+    <a href="{% url 'update-topic' topic.id %}">Edit</a>
+{% endif %}
+
 </form>
 {% else %}
 <p>You must be logged in to comment.</p>
