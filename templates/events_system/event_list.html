@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список івентів</title>
+</head>
+<body>
+    <h1>Список івентів</h1>
+    <ul>
+        {% for event in events %}
+            <li>
+                <h2>{{ event.title }}</h2>
+                <p>{{ event.description }}</p>
+                {% if event.img %}
+                    <img src="{{ event.img.url }}" alt="{{ event.title }}" style="max-width: 300px;">
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
