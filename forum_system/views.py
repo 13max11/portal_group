@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Category, Topic, Comment, Like
-#from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
 #from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import HttpResponseForbidden
@@ -157,3 +157,20 @@ def forum(request):
         'categories': categories,
         'form': form
     })
+
+def update_topic(request, pk):
+    topic = get_object_or_404(Topic, pk=pk)
+
+    # Проверяем, что текущий пользователь является автором поста
+    if topic.created_by != request.user:
+        return redirect('topic-detail', pk=pk)
+
+    if request.method == 'POST':
+        form = TopicForm(request.POST, instance=topic)
+        if form.is_valid():
+            form.save()
+            return redirect('topic-detail', pk=pk)
+    else:
+        form = TopicForm(instance=topic)
+
+    return render(request, 'forum_system/update_topic.html', {'form': form, 'topic': topic})
