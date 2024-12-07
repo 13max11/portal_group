@@ -8,16 +8,13 @@
 </head>
 <body>
     <div class="top-panel">
-        <form action="/">
-            <button type="submit" class="panel-button">Головна</button>
-        </form>
-        <form action="forum/">
-            <button type="submit" class="panel-button">Форум</button>
-        </form>
+        <a href="{%url 'index'%}"><button class="panel-button"><b>Головна</b></button></a>
+        <a href="{%url 'forum'%}"><button class="panel-button"><b>Форум</b></button></a>
+        <a href="{%url 'events-list'%}"><button class="panel-button"><b>Події</b></button></a>
         <div class="dropdown">
             <input type="checkbox" id="toggle" class="dropdown-toggle">
             <label for="toggle" class="panel-button dropdown-label">
-                Інше
+                <b>Інше</b>
                 <span class="arrow"></span>
             </label>
             <div class="dropdown-menu">
