@@ -1,19 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<a href="{% url 'create-topic' %}">Create New Topic</a>
-<h1>Forum Categories</h1>
+<h1>Головна сторінка</h1>
 
-{% if categories %}
-    <ul>
-        {% for category in categories %}
-            <li>
-                <a href="{% url 'category-detail' category.id %}">{{ category.name }}</a>
-                <p>{{ category.description }}</p>
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No categories available.</p>
-{% endif %}
 {% endblock %}
