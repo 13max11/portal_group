@@ -8,7 +8,8 @@ from django.http import HttpResponseForbidden
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, ListView, DetailView
 from django.urls import reverse_lazy
-from .forms import TopicForm, CategoryForm, Category
+from .forms import TopicForm, CategoryForm, Category, PollForm, PollOptionFormSet, TopicForm
+from .models import Poll, PollOption, Topic, Vote
 
 
 '''@login_required
@@ -64,49 +65,90 @@ def create_topic(request, category_id):
 class TopicCreateView(LoginRequiredMixin, CreateView):
     template_name = 'forum_system/create_topic.html'
     form_class = TopicForm
-    success_url = reverse_lazy('category')
+    success_url = "/forum/category/1/"
 
     def form_valid(self, form):
+        # Создаем Topic
         form.instance.created_by = self.request.user
-        return super().form_valid(form)
+        topic = form.save()
+
+        # Проверяем и обрабатываем голосования
+        polls_count = int(self.request.POST.get('polls_count', 0))  # Сколько голосований создал пользователь
+        for i in range(polls_count):
+            poll_title = self.request.POST.get(f'polls[{i}][title]')
+            poll_question = self.request.POST.get(f'polls[{i}][question]')
+            if poll_title and poll_question:
+                # Создаем голосование
+                poll = Poll.objects.create(topic=topic, title=poll_title, question=poll_question)
+
+                # Добавляем варианты ответа
+                option_idx = 0
+                while True:
+                    option_text = self.request.POST.get(f'polls[{i}][options][{option_idx}]')
+                    if option_text:
+                        option = PollOption.objects.create(poll=poll, text=option_text)
+                        option_idx += 1
+                    else:
+                        break  # Завершаем, когда опции заканчиваются
+                        
+        return redirect(self.success_url)
 
 
 class TopicDetailView(DetailView):
     model = Topic
     template_name = 'forum_system/topic_detail.html'
     context_object_name = 'topic'
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        # Получаем все голосования для текущего топика
+        polls = self.object.polls.prefetch_related('options')
+        context['polls'] = polls
+
+        # Проверяем, голосовал ли пользователь
+        user_vote_texts = {}
+        if self.request.user.is_authenticated:
+            for poll in polls:
+                user_vote = poll.options.filter(votes=self.request.user).first()
+                if user_vote:
+                    user_vote_texts[poll.pk] = user_vote.text
+        context['user_vote_texts'] = user_vote_texts
+
+        # Дополнительный контекст
         context['comments'] = self.object.comments.all()
         context['likes_count'] = self.object.likes.count()
         return context
-    
+
     def post(self, request, *args, **kwargs):
         topic = self.get_object()
 
-        if "comment" in request.POST:
-            content = request.POST.get("content")
-            if content:
-                Comment.objects.create(
-                    topic=topic,
-                    content=content,
-                    created_by=request.user
-                )
-            else:
-                messages.error(request, "Comment cannot be empty.")
-        
-        elif "like" in request.POST:
+        # Обработка голосования
+        if "vote" in request.POST:
+            if not request.user.is_authenticated:
+                return HttpResponseForbidden("You must log in to vote.")
+
+            poll_id = request.POST.get('poll_id')
+            option_id = request.POST.get('vote')
+            try:
+                option = PollOption.objects.get(pk=option_id)
+                if not option.votes.filter(id=request.user.id).exists():
+                    option.votes.add(request.user)
+            except PollOption.DoesNotExist:
+                pass
+            return redirect('topic-detail', pk=topic.pk)
+
+        # Обработка лайков
+        if "like" in request.POST:
             if request.user.is_authenticated:
                 existing_like = Like.objects.filter(topic=topic, user=request.user).first()
                 if existing_like:
-                    existing_like.delete()  # Удалить лайк, якщо вже існує
+                    existing_like.delete()
                 else:
                     Like.objects.create(topic=topic, user=request.user)
             else:
-                return HttpResponseForbidden("You must be logged in to like a topic.")
-        
-        # Redirect to the same page after processing the POST request
+                return HttpResponseForbidden("You must log in to like.")
+
         return redirect('topic-detail', pk=topic.pk)
 
 class CategoryDetailView(DetailView):
@@ -174,3 +216,20 @@ def update_topic(request, pk):
         form = TopicForm(instance=topic)
 
     return render(request, 'forum_system/update_topic.html', {'form': form, 'topic': topic})
+
+def create_poll(request):
+    if request.method == "POST":
+        form = PollForm(request.POST)
+        formset = PollOptionFormSet(request.POST)
+        if form.is_valid() and formset.is_valid():
+            poll = form.save()
+            options = formset.save(commit=False)
+            for option in options:
+                option.poll = poll
+                option.save()
+            return redirect('index')  # Перенаправление на главную страницу
+    else:
+        form = PollForm()
+        formset = PollOptionFormSet()
+
+    return render(request, 'forum_system/create_poll.html', {'form': form, 'formset': formset})

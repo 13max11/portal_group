@@ -8,4 +8,5 @@ urlpatterns = [
     path('create-topic/', views.TopicCreateView.as_view(), name='create-topic'),
     path('topic/<int:pk>/', views.TopicDetailView.as_view(), name='topic-detail'),
     path('topic/<int:pk>/edit/', views.update_topic, name='update-topic'),
+    path('create-poll/', views.create_poll, name='create-poll'),
 ]

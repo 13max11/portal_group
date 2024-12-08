@@ -113,3 +113,26 @@ form {
         transform: translateY(0);
     }
 }
+
+#poll-section {
+    margin: 20px 0;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+.poll-option {
+    margin-bottom: 10px;
+}
+
+.poll-container {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.poll-container h3 {
+    margin: 0 0 10px;
+}
+
+.poll-container form div {
+    margin: 5px 0;
+}

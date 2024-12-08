@@ -1,5 +1,4 @@
-{% extends 'base.html' %}
-
+{% extends 'base.html' %} 
 
 {% block content %}
 
@@ -33,13 +32,48 @@
     {% csrf_token %}
     <textarea name="content" rows="3" required></textarea><br>
     <button type="submit" name="comment">Add Comment</button>
-    {% if request.user == topic.created_by %}
-    <a href="{% url 'update-topic' topic.id %}">Edit</a>
-{% endif %}
-
 </form>
 {% else %}
 <p>You must be logged in to comment.</p>
 {% endif %}
+
+<h2>Polls</h2>
+{% if polls %}
+    {% for poll in polls %}
+    <div class="poll-container">
+        <h3>{{ poll.question }}</h3>
+
+        {% if poll.pk in user_votes %}
+            <!-- Пользователь уже проголосовал -->
+            {% if poll.pk in user_vote_texts %}
+                <p><strong>Your choice:</strong> {{ user_vote_texts[poll.pk] }}</p>
+            {% endif %}
+            <div>
+                {% for option in poll.options.all %}
+                    <p>{{ option.text }}: {{ option.votes.count }} votes</p>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- Пользователь может проголосовать -->
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="poll_id" value="{{ poll.pk }}">
+                {% for option in poll.options.all %}
+                    <div>
+                        <button type="submit" name="vote" value="{{ option.pk }}">
+                            {{ option.text }}
+                        </button>
+                    </div>
+                {% endfor %}
+            </form>
+        {% endif %}
+        
+    </div>
+    {% endfor %}
+{% else %}
+<p>No active polls for this topic.</p>
+{% endif %}
+
 <a href="{% url 'category-detail' topic.category.id %}">Back to Category</a>
+
 {% endblock %}
