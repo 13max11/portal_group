@@ -46,7 +46,7 @@
         {% if poll.pk in user_votes %}
             <!-- Пользователь уже проголосовал -->
             {% if poll.pk in user_vote_texts %}
-                <p><strong>Your choice:</strong> {{ user_vote_texts[poll.pk] }}</p>
+                <p><strong>Your choice:</strong> {{ user_vote_texts }}</p>
             {% endif %}
             <div>
                 {% for option in poll.options.all %}

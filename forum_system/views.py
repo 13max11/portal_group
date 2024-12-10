@@ -124,6 +124,18 @@ class TopicDetailView(DetailView):
         topic = self.get_object()
 
         # Обработка голосования
+
+        if "comment" in request.POST:
+            content = request.POST.get("content")
+            if content:
+                Comment.objects.create(
+                    topic=topic,
+                    content=content,
+                    created_by=request.user
+                )
+            else:
+                messages.error(request, "Comment cannot be empty.")
+
         if "vote" in request.POST:
             if not request.user.is_authenticated:
                 return HttpResponseForbidden("You must log in to vote.")
