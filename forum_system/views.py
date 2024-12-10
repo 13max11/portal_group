@@ -65,7 +65,7 @@ def create_topic(request, category_id):
 class TopicCreateView(LoginRequiredMixin, CreateView):
     template_name = 'forum_system/create_topic.html'
     form_class = TopicForm
-    success_url = "/forum/category/1/"
+    success_url = reverse_lazy('forum')
 
     def form_valid(self, form):
         # Создаем Topic
