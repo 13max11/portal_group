@@ -194,4 +194,4 @@ def delete_topic(request, pk):
     # Видаляємо топик
     topic.delete()
     messages.success(request, "Topic deleted successfully")
-    return redirect(f'/forum/category/{topic_category}')
+    return redirect('category-detail', topic_category)
