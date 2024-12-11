@@ -4,39 +4,7 @@
 <h1>Create a Topic in {{ category.name }}</h1>
 <form method="post">
     {% csrf_token %}
-    
-    <h3>Topic Information</h3>
-    {{ form.as_p }}
-
-    <div id="polls-container"></div>
-    <button type="button" id="add-poll-btn">Добавить голосование</button>
-    <input type="hidden" id="polls_count" name="polls_count" value="0">
-    
-    <br><br>
+    {{form.as_p}}
     <button type="submit">Create Topic</button>
 </form>
-
-<script>
-let pollsContainer = document.getElementById('polls-container');
-let addPollButton = document.getElementById('add-poll-btn');
-let pollsCount = 0;
-
-addPollButton.addEventListener('click', function() {
-    pollsCount++;
-    document.getElementById('polls_count').value = pollsCount;
-
-    const pollHTML = `
-    <div class="poll-block" id="poll-${pollsCount}">
-        <h3>Poll ${pollsCount}</h3>
-        <input type="text" name="polls[${pollsCount}][title]" placeholder="Poll Title" required><br>
-        <input type="text" name="polls[${pollsCount}][question]" placeholder="Poll Question" required><br>
-        <div class="options-container">
-            <input type="text" name="polls[${pollsCount}][options][0]" placeholder="Option 1" required><br>
-            <input type="text" name="polls[${pollsCount}][options][1]" placeholder="Option 2" required><br>
-        </div>
-    </div>
-    `;
-    pollsContainer.insertAdjacentHTML('beforeend', pollHTML);
-});
-</script>
 {% endblock %}
