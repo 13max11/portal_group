@@ -9,23 +9,20 @@
 <p>Likes: {{ likes_count }}</p>
 
 <form method="post">
-  {% csrf_token %}
-  <button type="submit" name="like">
-    {% if request.user in topic.likes.all %} Unlike {% else %} Like {% endif %}
-  </button>
+  	{% csrf_token %}
+  	<button type="submit" name="like">
+    	{% if request.user in topic.likes.all %} Unlike {% else %} Like {% endif %}
+  	</button>
 </form>
 
 <h2>Comments</h2>
 <ul>
-  {% for comment in comments %}
-  <li>
-    <strong
-      >{{ comment.created_by.username }} {% if comment.created_by.pk ==
-      topic.created_by.pk %} [OP] {% endif %} :</strong
-    >
-    {{ comment.content }}
-  </li>
-  {% endfor %}
+  	{% for comment in comments %}
+  	<li>
+    	<strong>{{ comment.created_by.username }} {% if comment.created_by.pk == topic.created_by.pk %} [OP] {% endif %} :</strong>
+    	{{ comment.content }}
+  	</li>
+	{% endfor %}
 </ul>
 
 {% if request.user.is_authenticated %}
@@ -34,22 +31,15 @@
     <textarea name="content" rows="3" required></textarea><br>
     <button type="submit" name="comment">Add Comment</button>
     {% if request.user == topic.created_by %}
-    <a href="{% url 'update-topic' topic.id %}">Edit</a>
-{% endif %}
+    	<a href="{% url 'update-topic' topic.id %}">Edit</a>
+    	<a href="{% url 'delete-topic' topic.pk %}">Remove</a>
+    {% endif %}
 
 </form>
 {% else %}
-<p>You must be logged in to comment.</p>
+	<p>You must be logged in to comment.</p>
 {% endif %}
 <a href="{% url 'category-detail' topic.category.id %}">Back to Category</a>
 
-{%if topic.authot == request.user %}
-<from
-  action="{% url 'delete_topic' topic.pk %}"
-  method="post"
-  style="display: inline"
->
-  {% csrf_token %}
-  <button type="submit" class="btn btn-danger">Remove</button>
-</from>
+
 {% endblock %}

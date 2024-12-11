@@ -184,13 +184,14 @@ def delete_topic(request, pk):
     
     # Отримуємо топік за його ID
     topic = get_object_or_404(Topic, pk=pk)
+    topic_category = topic.category.pk
 
     # Перевіряємо, чи користувач є автором теми
-    if topic.author != request.user:
+    if topic.created_by != request.user:
         messages.error(request, "You cannot delet this topic.")
-        return redirect('forum_home')
+        return redirect('topic-detail', topic.pk)
     
     # Видаляємо топик
     topic.delete()
     messages.success(request, "Topic deleted successfully")
-    return redirect('forum_home')
+    return redirect(f'/forum/category/{topic_category}')
