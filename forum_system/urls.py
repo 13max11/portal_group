@@ -9,4 +9,5 @@ urlpatterns = [
     path('topic/<int:pk>/', views.TopicDetailView.as_view(), name='topic-detail'),
     path('topic/<int:pk>/edit/', views.update_topic, name='update-topic'),
     path('create-poll/', views.create_poll, name='create-poll'),
+    path('delete/<int:pk/', views.delete_topic, name='delete_topic'),
 ]

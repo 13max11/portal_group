@@ -245,3 +245,22 @@ def create_poll(request):
         formset = PollOptionFormSet()
 
     return render(request, 'forum_system/create_poll.html', {'form': form, 'formset': formset})
+
+def delete_topic(request, pk):
+    # Перевіряємо, чи користувач авторизований
+    if not request.user.is_authenticated:
+        messages.error(request, "You must be logged in to delete a topic.")
+        return redirect('forum_home') # Перенаправлення на головну сторінку форуму
+    
+    # Отримуємо топік за його ID
+    topic = get_object_or_404(Topic, pk=pk)
+
+    # Перевіряємо, чи користувач є автором теми
+    if topic.author != request.user:
+        messages.error(request, "You cannot delet this topic.")
+        return redirect('forum_home')
+    
+    # Видаляємо топик
+    topic.delete()
+    messages.success(request, "Topic deleted successfully")
+    return redirect('forum_home')
