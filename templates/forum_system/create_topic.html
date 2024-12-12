@@ -2,9 +2,68 @@
 
 {% block content %}
 <h1>Create a Topic in {{ category.name }}</h1>
+
+<!-- Форма создания нового топика -->
 <form method="post">
     {% csrf_token %}
-    {{form.as_p}}
+    {{ form.as_p }}
     <button type="submit">Create Topic</button>
 </form>
+
+<!-- Отображаем создание голосования только если топик уже создан -->
+{% if topic %}
+    <hr>
+
+    <!-- Форма для создания голосования -->
+    <h2>Create Poll</h2>
+    <form method="post" action="{% url 'create-poll' topic.id %}">
+        {% csrf_token %}
+        <label for="poll_title">Poll Title:</label>
+        <input type="text" name="poll_title" id="poll_title" required><br>
+
+        <label for="poll_description">Poll Description:</label>
+        <textarea name="poll_description" id="poll_description" rows="4" required></textarea><br>
+
+        <button type="submit">Create Poll</button>
+    </form>
+
+    <!-- Если уже существует голосование -->
+    {% if poll %}
+        <hr>
+        <h2>Current Poll: {{ poll.title }}</h2>
+        <p>{{ poll.description }}</p>
+
+        <!-- Варианты ответов -->
+        <h3>Options</h3>
+        <ul>
+            {% for option in poll.options.all %}
+            <li>
+                {{ option.text }}
+                <form method="post" action="{% url 'delete-poll-option' option.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <!-- Форма для добавления нового варианта ответа -->
+        <form method="post" action="{% url 'add-poll-option' poll.id %}">
+            {% csrf_token %}
+            <label for="option_text">New Option:</label>
+            <input type="text" name="option_text" id="option_text" required>
+            <button type="submit">Add Option</button>
+        </form>
+
+        <!-- Удаление голосования -->
+        <form method="post" action="{% url 'delete-poll' poll.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Delete Poll</button>
+        </form>
+    {% endif %}
+{% else %}
+    <p>Create a topic first to add polls.</p>
+{% endif %}
+
+<a href="{% url 'category-detail' category.id %}">{{ category.name }}</a>Back to Category</a>
 {% endblock %}
