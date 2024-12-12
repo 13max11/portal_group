@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 
-
 {% block content %}
 
 <h1>{{ topic.title }}</h1>
@@ -9,20 +8,55 @@
 <p>Likes: {{ likes_count }}</p>
 
 <form method="post">
-  	{% csrf_token %}
-  	<button type="submit" name="like">
-    	{% if request.user in topic.likes.all %} Unlike {% else %} Like {% endif %}
-  	</button>
+    {% csrf_token %}
+    <button type="submit" name="like">
+        {% if request.user in topic.likes.all %} Unlike {% else %} Like {% endif %}
+    </button>
 </form>
+
+<h2>Polls</h2>
+{% for poll in topic.polls.all %}
+    <div>
+        <h3>{{ poll.name }}</h3>
+        <p>{{ poll.description }}</p>
+        {% if request.user.is_authenticated and poll.votes.filter(user=request.user).exists %}
+            <ul>
+                {% for option in poll.options.all %}
+                    <li>
+                        {{ option.text }} - {{ option.votes }} votes 
+                        ({{ option.votes|floatformat:2 }}%)
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <form method="post" action="{% url 'vote' poll.id %}">
+                {% csrf_token %}
+                {% for option in poll.options.all %}
+                    <label>
+                        <input type="radio" name="option" value="{{ option.id }}">
+                        {{ option.text }}
+                    </label><br>
+                {% endfor %}
+                <button type="submit">Vote</button>
+            </form>
+        {% endif %}
+    </div>
+{% empty %}
+    <p>No polls available for this topic.</p>
+{% endfor %}
+
+{% if request.user == topic.created_by %}
+    <a href="{% url 'create-poll' topic.id %}">Create Poll</a>
+{% endif %}
 
 <h2>Comments</h2>
 <ul>
-  	{% for comment in comments %}
-  	<li>
-    	<strong>{{ comment.created_by.username }} {% if comment.created_by.pk == topic.created_by.pk %} [OP] {% endif %} :</strong>
-    	{{ comment.content }}
-  	</li>
-	{% endfor %}
+    {% for comment in comments %}
+    <li>
+        <strong>{{ comment.created_by.username }} {% if comment.created_by.pk == topic.created_by.pk %} [OP] {% endif %} :</strong>
+        {{ comment.content }}
+    </li>
+    {% endfor %}
 </ul>
 
 {% if request.user.is_authenticated %}
@@ -31,15 +65,14 @@
     <textarea name="content" rows="3" required></textarea><br>
     <button type="submit" name="comment">Add Comment</button>
     {% if request.user == topic.created_by %}
-    	<a href="{% url 'update-topic' topic.id %}">Edit</a>
-    	<a href="{% url 'delete-topic' topic.pk %}">Remove</a>
+        <a href="{% url 'update-topic' topic.id %}">Edit</a>
+        <a href="{% url 'delete-topic' topic.pk %}">Remove</a>
     {% endif %}
-
 </form>
 {% else %}
-	<p>You must be logged in to comment.</p>
+    <p>You must be logged in to comment.</p>
 {% endif %}
-<a href="{% url 'category-detail' topic.category.id %}">Back to Category</a>
 
+<a href="{% url 'category-detail' topic.category.id %}">Back to Category</a>
 
 {% endblock %}

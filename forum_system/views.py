@@ -8,7 +8,78 @@ from django.http import HttpResponseForbidden
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, ListView, DetailView
 from django.urls import reverse_lazy
-from .forms import TopicForm, CategoryForm, Category
+
+from .forms import TopicForm, CategoryForm, Category, PollForm, PollOptionForm
+from django.http import JsonResponse
+from .models import Topic, Poll, PollOption, PollVote
+
+@login_required
+def create_poll(request, topic_id):
+    topic = get_object_or_404(Topic, id=topic_id)
+
+    if request.method == 'POST':
+        poll_form = PollForm(request.POST)
+        if poll_form.is_valid():
+            poll = poll_form.save(commit=False)
+            poll.topic = topic
+            poll.save()
+            return redirect('topic-detail', pk=topic_id)
+    else:
+        poll_form = PollForm()
+
+    return render(request, 'forum_system/create_poll.html', {'form': poll_form, 'topic': topic})
+
+@login_required
+def add_poll_option(request, poll_id):
+    poll = get_object_or_404(Poll, id=poll_id)
+
+    if request.method == 'POST':
+        option_form = PollOptionForm(request.POST)
+        if option_form.is_valid():
+            option = option_form.save(commit=False)
+            option.poll = poll
+            option.save()
+            return redirect('topic-detail', pk=poll.topic.id)
+    else:
+        option_form = PollOptionForm()
+
+    return render(request, 'forum_system/add_poll_option.html', {'form': option_form, 'poll': poll})
+
+@login_required
+def vote_poll(request, option_id):
+    option = get_object_or_404(PollOption, id=option_id)
+    poll = option.poll
+
+    if not PollVote.objects.filter(option__poll=poll, user=request.user).exists():
+        PollVote.objects.create(option=option, user=request.user)
+        option.votes += 1
+        option.save()
+
+    return JsonResponse({
+        'success': True,
+        'poll_results': [
+            {
+                'text': o.text,
+                'votes': o.votes,
+                'percentage': o.votes * 100 / sum(opt.votes for opt in poll.options.all())
+            } for o in poll.options.all()
+        ]
+    })
+
+@login_required
+def delete_poll(request, poll_id):
+    poll = get_object_or_404(Poll, id=poll_id)
+    if poll.topic.created_by == request.user:
+        poll.delete()
+    return redirect('topic-detail', pk=poll.topic.id)
+
+@login_required
+def delete_poll_option(request, option_id):
+    option = get_object_or_404(PollOption, id=option_id)
+    poll = option.poll
+    if poll.topic.created_by == request.user:
+        option.delete()
+    return redirect('topic-detail', pk=poll.topic.id)
 
 
 '''@login_required
@@ -68,7 +139,8 @@ class TopicCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
-        return super().form_valid(form)
+        self.object = form.save()
+        return redirect('topic-detail', pk=self.object.pk)  # Перенаправляем на страницу с деталями топика
 
 
 class TopicDetailView(DetailView):
