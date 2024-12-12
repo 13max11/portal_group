@@ -11,7 +11,7 @@ urlpatterns = [
     path('topic/<int:pk>/delete', views.delete_topic, name='delete-topic'),
 
     # urls для голосування
-    path('poll/<int:poll_id>/vote/', views.vote_poll, name='vote'),
+    path('poll/<int:pk>/vote/', views.vote_poll, name='vote'),
     path('topic/<int:topic_id>/create-poll/', views.create_poll, name='create-poll'),
     path('poll/<int:poll_id>/delete/', views.delete_poll, name='delete-poll'),
     path('poll/<int:poll_id>/add-option/', views.add_poll_option, name='add-poll-option'),

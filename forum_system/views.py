@@ -46,8 +46,8 @@ def add_poll_option(request, poll_id):
     return render(request, 'forum_system/add_poll_option.html', {'form': option_form, 'poll': poll})
 
 @login_required
-def vote_poll(request, option_id):
-    option = get_object_or_404(PollOption, id=option_id)
+def vote_poll(request, pk):
+    option = get_object_or_404(PollOption, id=pk)
     poll = option.poll
 
     if not PollVote.objects.filter(option__poll=poll, user=request.user).exists():
