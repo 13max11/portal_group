@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Профіль: {{ user.first_name }} {{ user.last_name }}</h2>
+
+<!-- Change Password Form -->
+<form action="{% url 'change-password' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Змінити пароль</button>
+</form>
+
+<!-- Change Avatar Form -->
+<form action="{% url 'change-avatar' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <button type="submit">Змінити аватар профілю</button>
+</form>
+
+<h3>Пошта: {{ user.email }}</h3>
+<!-- Change Email Form -->
+<form action="{% url 'change-email' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Змінити емейл</button>
+</form>
+
+<h3>Номер телефону: {{ user.phone_number }}</h3>
+<!-- Change Phone Number Form -->
+<form action="{% url 'change-phone-number' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Змінити номер телефону</button>
+</form>
+
+<p>{{ user.description }}</p>
+<!-- Change Description Form -->
+<form action="{% url 'change-description' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Змінити опис профілю</button>
+</form>
+
+{% if viewer.is_admin or viewer.is_superuser or viewer == user %}
+    <!-- Save Profile Form -->
+    <form action="{% url 'save-profile' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Зберегти профіль</button>
+    </form>
+{% endif %}
+{% endblock %}
