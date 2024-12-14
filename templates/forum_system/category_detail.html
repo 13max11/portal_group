@@ -12,8 +12,8 @@
         {% endfor %}
     </ul>
 {% else %}
-    <p>No topics found in this category.</p>
+    <p>Немає тем для обговорення в цій категорії.</p>
 {% endif %}
 
-<a href="{% url 'create-topic' %}">Create New Topic</a>
+<a href="{% url 'create-topic' %}">Створити нову тему</a>
 {% endblock %}
