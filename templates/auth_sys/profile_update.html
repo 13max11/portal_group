@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Профіль: {{ user.first_name }} {{ user.last_name }}</h2>
+<h2>Профіль: {{ user.username }}</h2>
 
 <!-- Change Password Form -->
 <form action="{% url 'change-password' %}" method="post">

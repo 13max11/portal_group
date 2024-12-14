@@ -1,11 +1,13 @@
     {% extends 'base.html' %}
 
     {% block content %}
-    <h2>Профіль: {{ user.first_name }} {{ user.last_name }}</h2>
+    <h2>Профіль: {{ user.username }}</h2>
 
-    <img src="media/images/avatars/{{ user.avatar }}.jpg" alt="Avatar">
+    <h3>{{ user.first_name }} {{ user.last_name }}</h3>
 
-    {% if viewer.is_admin or viewer.is_superuser %}
+    <img src="{{ user.avatar.url }}" alt="Avatar" width="50">
+
+    {% if request.user.is_admin or request.user.is_superuser %}
         <h3>Пошта: {{ user.email }}</h3>
         <h3>Номер телефону: {{ user.phone_number }}</h3>
     {% else %}
@@ -19,7 +21,7 @@
 
     <p>{{ user.description }}</p>
 
-    {% if viewer.is_admin or viewer.is_superuser or viewer == user %}
+    {% if request.user.is_admin or request.user.is_superuser or request.user == user %}
         <!-- Form to edit profile -->
         <form action="{% url 'profile-update' %}" method="post">
             {% csrf_token %}

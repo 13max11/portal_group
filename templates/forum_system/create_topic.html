@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Створення теми в: {{ category.name }}</h1>
+<h1>Створення теми: {{ category.name }}</h1>
 
 <!-- Форма создания нового топика -->
 <form method="post">
@@ -61,8 +61,6 @@
             <button type="submit" class="btn btn-danger">Видалити опитування</button>
         </form>
     {% endif %}
-{% else %}
-    <p>Спочатку створіть тему, потім опитування.</p>
 {% endif %}
 
 {% endblock %}

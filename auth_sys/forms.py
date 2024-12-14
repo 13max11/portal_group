@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
-        model = User
+        model = CustomUser
         fields = ['first_name', 'last_name', 'email', 'phone_number', 'description', 'avatar']
 
 class ChangePasswordForm(forms.Form):

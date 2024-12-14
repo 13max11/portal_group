@@ -34,10 +34,12 @@ def logout_view(request):
 
 
 @login_required
-def profile_view(request):
-    user = request.user
-    viewer = request.user  # Це поточний залогінений користувач
-    return render(request, 'profile.html', {'user': user, 'viewer': viewer})
+def profile_view(request, username):
+    user = CustomUser.objects.get(username=username)
+    context = {
+        'user': user
+    }
+    return render(request, 'auth_sys/profile.html', context)
 
 @login_required
 def profile_update(request):
@@ -49,7 +51,7 @@ def profile_update(request):
             return redirect('profile-view')  # Після збереження редіректимо на профіль
     else:
         form = ProfileUpdateForm(instance=user)
-    return render(request, 'profile_update.html', {'form': form})
+    return render(request, 'auth_sys/profile_update.html', {'form': form})
 
 @login_required
 def change_password(request):
