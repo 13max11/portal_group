@@ -1,5 +1,5 @@
 from django import forms
-from .models import Category, Topic, Comment
+from .models import Category, Topic, Comment, Poll, PollOption
 
 class CategoryForm(forms.ModelForm):
     class Meta:
@@ -17,3 +17,13 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['content']
+
+class PollForm(forms.ModelForm):
+    class Meta:
+        model = Poll
+        fields = ['name', 'description']
+
+class PollOptionForm(forms.ModelForm):
+    class Meta:
+        model = PollOption
+        fields = ['text']

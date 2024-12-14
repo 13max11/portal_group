@@ -35,3 +35,29 @@ class Like(models.Model):
 
     class Meta:
         unique_together = ("topic", "user")
+
+class Poll(models.Model):
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name="polls")
+    name = models.CharField(max_length=200)
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+
+class PollOption(models.Model):
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE, related_name="options")
+    text = models.CharField(max_length=200)
+    votes = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.text} ({self.votes} votes)"
+
+
+class PollVote(models.Model):
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE, related_name="votes")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    option = models.ForeignKey(PollOption, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ("poll", "user")

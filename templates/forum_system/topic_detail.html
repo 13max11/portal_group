@@ -1,30 +1,64 @@
 {% extends 'base.html' %}
 
+{% load custom_tags %}
 
 {% block content %}
 
+
 <h1>{{ topic.title }}</h1>
 <p>{{ topic.content|linebreaks }}</p>
-<p>Created by: {{ topic.created_by }}</p>
-<p>Likes: {{ likes_count }}</p>
+<p>Створено: {{ topic.created_by }}</p>
+<p>Вподобати: {{ likes_count }}</p>
 
 <form method="post">
     {% csrf_token %}
     <button type="submit" name="like">
-        {% if request.user in topic.likes.all %}
-            Unlike
-        {% else %}
-            Like
-        {% endif %}
+        {% if request.user in topic.likes.all %} Дивподобати {% else %} Like {% endif %}
     </button>
 </form>
 
-<h2>Comments</h2>
+<h2>Опитування</h2>
+{% for poll in topic.polls.all %}
+    <div>
+        <h3>{{ poll.name }}</h3>
+        <p>{{ poll.description }}</p>
+        {% if request.user.is_authenticated and poll|has_voted:request.user %}
+            <ul>
+                {% for option in poll.options.all %}
+                    <li>
+                        {{ option.text }} - {{ option.votes }} голоси
+                        ({{ option.votes|floatformat:2 }}%)
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <form method="post" action="{% url 'vote' poll.id %}">
+                {% csrf_token %}
+                {% for option in poll.options.all %}
+                    <label>
+                        <input type="radio" name="option" value="{{ option.id }}">
+                        {{ option.text }}
+                    </label><br>
+                {% endfor %}
+                <button type="submit">Голосувати</button>
+            </form>
+        {% endif %}
+    </div>
+{% empty %}
+    <p>Не існує доступних тем.</p>
+{% endfor %}
+
+{% if request.user == topic.created_by %}
+    <a href="{% url 'create-poll' topic.id %}">Створити опитування</a>
+{% endif %}
+
+<h2>Коментарі</h2>
 <ul>
     {% for comment in comments %}
-        <li>
-            <strong>{{ comment.created_by.username }} {% if comment.created_by.pk == topic.created_by.pk %} [OP] {% endif %} :</strong> {{ comment.content }}
-        </li>
+    <li>
+        <strong>{{ comment.created_by.username }} {% if comment.created_by.pk == topic.created_by.pk %} [OP] {% endif %} :</strong>
+        {{ comment.content }}
+    </li>
     {% endfor %}
 </ul>
 
@@ -32,14 +66,16 @@
 <form method="post">
     {% csrf_token %}
     <textarea name="content" rows="3" required></textarea><br>
-    <button type="submit" name="comment">Add Comment</button>
+    <button type="submit" name="comment">Додати коментарії</button>
     {% if request.user == topic.created_by %}
-    <a href="{% url 'update-topic' topic.id %}">Edit</a>
-{% endif %}
-
+        <a href="{% url 'update-topic' topic.id %}">Змінити</a>
+        <a href="{% url 'delete-topic' topic.pk %}">Видалити</a>
+    {% endif %}
 </form>
 {% else %}
-<p>You must be logged in to comment.</p>
+    <p>Ви маєте бути автентифікованим.</p>
 {% endif %}
-<a href="{% url 'category-detail' topic.category.id %}">Back to Category</a>
+
+<a href="{% url 'category-detail' topic.category.id %}">Повернутися до категорій</a>
+
 {% endblock %}
