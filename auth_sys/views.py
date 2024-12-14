@@ -16,6 +16,9 @@ class AuthPageView(TemplateView):
     template_name = 'auth_sys/auth_page.html'
 
 def registration(request):
+    if request.user.is_authenticated:
+        return redirect('index')
+
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
 
