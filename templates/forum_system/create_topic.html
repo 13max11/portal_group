@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Create a Topic in {{ category.name }}</h1>
+<h1>Створення теми в: {{ category.name }}</h1>
 
 <!-- Форма создания нового топика -->
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Create Topic</button>
+    <button type="submit">Створити тему</button>
 </form>
 
 <!-- Отображаем создание голосования только если топик уже создан -->
@@ -15,33 +15,33 @@
     <hr>
 
     <!-- Форма для создания голосования -->
-    <h2>Create Poll</h2>
+    <h2>Створити голосування</h2>
     <form method="post" action="{% url 'create-poll' topic.id %}">
         {% csrf_token %}
-        <label for="poll_title">Poll Title:</label>
+        <label for="poll_title">Назва опитування:</label>
         <input type="text" name="poll_title" id="poll_title" required><br>
 
-        <label for="poll_description">Poll Description:</label>
+        <label for="poll_description">Детальніше про опитування:</label>
         <textarea name="poll_description" id="poll_description" rows="4" required></textarea><br>
 
-        <button type="submit">Create Poll</button>
+        <button type="submit">Створити опитування</button>
     </form>
 
     <!-- Если уже существует голосование -->
     {% if poll %}
         <hr>
-        <h2>Current Poll: {{ poll.title }}</h2>
+        <h2>Існуюче опитування: {{ poll.title }}</h2>
         <p>{{ poll.description }}</p>
 
         <!-- Варианты ответов -->
-        <h3>Options</h3>
+        <h3>Варіанти відповідей</h3>
         <ul>
             {% for option in poll.options.all %}
             <li>
                 {{ option.text }}
                 <form method="post" action="{% url 'delete-poll-option' option.id %}" style="display:inline;">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="submit" class="btn btn-danger">Видалити</button>
                 </form>
             </li>
             {% endfor %}
@@ -50,19 +50,19 @@
         <!-- Форма для добавления нового варианта ответа -->
         <form method="post" action="{% url 'add-poll-option' poll.id %}">
             {% csrf_token %}
-            <label for="option_text">New Option:</label>
+            <label for="option_text">Нова можлива відповідь:</label>
             <input type="text" name="option_text" id="option_text" required>
-            <button type="submit">Add Option</button>
+            <button type="submit">Додати можливу відповідь</button>
         </form>
 
         <!-- Удаление голосования -->
         <form method="post" action="{% url 'delete-poll' poll.id %}">
             {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Delete Poll</button>
+            <button type="submit" class="btn btn-danger">Видалити опитування</button>
         </form>
     {% endif %}
 {% else %}
-    <p>Create a topic first to add polls.</p>
+    <p>Спочатку створіть тему, потім опитування.</p>
 {% endif %}
 
 {% endblock %}

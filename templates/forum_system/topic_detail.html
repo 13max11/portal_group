@@ -7,17 +7,17 @@
 
 <h1>{{ topic.title }}</h1>
 <p>{{ topic.content|linebreaks }}</p>
-<p>Created by: {{ topic.created_by }}</p>
-<p>Likes: {{ likes_count }}</p>
+<p>Створено: {{ topic.created_by }}</p>
+<p>Вподобати: {{ likes_count }}</p>
 
 <form method="post">
     {% csrf_token %}
     <button type="submit" name="like">
-        {% if request.user in topic.likes.all %} Unlike {% else %} Like {% endif %}
+        {% if request.user in topic.likes.all %} Дивподобати {% else %} Like {% endif %}
     </button>
 </form>
 
-<h2>Polls</h2>
+<h2>Опитування</h2>
 {% for poll in topic.polls.all %}
     <div>
         <h3>{{ poll.name }}</h3>
@@ -26,7 +26,7 @@
             <ul>
                 {% for option in poll.options.all %}
                     <li>
-                        {{ option.text }} - {{ option.votes }} votes 
+                        {{ option.text }} - {{ option.votes }} голоси
                         ({{ option.votes|floatformat:2 }}%)
                     </li>
                 {% endfor %}
@@ -40,19 +40,19 @@
                         {{ option.text }}
                     </label><br>
                 {% endfor %}
-                <button type="submit">Vote</button>
+                <button type="submit">Голосувати</button>
             </form>
         {% endif %}
     </div>
 {% empty %}
-    <p>No polls available for this topic.</p>
+    <p>Не існує доступних тем.</p>
 {% endfor %}
 
 {% if request.user == topic.created_by %}
-    <a href="{% url 'create-poll' topic.id %}">Create Poll</a>
+    <a href="{% url 'create-poll' topic.id %}">Створити опитування</a>
 {% endif %}
 
-<h2>Comments</h2>
+<h2>Коментарі</h2>
 <ul>
     {% for comment in comments %}
     <li>
@@ -66,16 +66,16 @@
 <form method="post">
     {% csrf_token %}
     <textarea name="content" rows="3" required></textarea><br>
-    <button type="submit" name="comment">Add Comment</button>
+    <button type="submit" name="comment">Додати коментарії</button>
     {% if request.user == topic.created_by %}
-        <a href="{% url 'update-topic' topic.id %}">Edit</a>
-        <a href="{% url 'delete-topic' topic.pk %}">Remove</a>
+        <a href="{% url 'update-topic' topic.id %}">Змінити</a>
+        <a href="{% url 'delete-topic' topic.pk %}">Видалити</a>
     {% endif %}
 </form>
 {% else %}
-    <p>You must be logged in to comment.</p>
+    <p>Ви маєте бути автентифікованим.</p>
 {% endif %}
 
-<a href="{% url 'category-detail' topic.category.id %}">Back to Category</a>
+<a href="{% url 'category-detail' topic.category.id %}">Повернутися до категорій</a>
 
 {% endblock %}
