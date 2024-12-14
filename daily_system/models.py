@@ -10,7 +10,7 @@ class Lesson(models.Model):
     ]) #відсутність чи присутністьь учня на уроці
 
     def __str__(self):
-        return {self.theme} - {self.date}
+        return f'{self.theme} - {self.date}'
     
     
 class Homework(models.Model):
