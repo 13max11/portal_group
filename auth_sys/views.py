@@ -15,15 +15,18 @@ from .forms import ProfileUpdateForm, ChangePasswordForm, ChangeAvatarForm, Chan
 class AuthPageView(TemplateView):
     template_name = 'auth_sys/auth_page.html'
 
-class RegistationView(CreateView):
-    form_class = CustomUserCreationForm
-    template_name = 'auth_sys/register.html'
-    success_url = reverse_lazy('login')
+def registration(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
 
-    def form_valid(self, form):
-        user = form.save()
-        login(self.request, user)
-        return super().form_valid(form)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+
+            return redirect('index')
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'auth_sys/register.html', {'form': form})
 
 def logout_view(request):
     logout(request)
