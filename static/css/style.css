@@ -97,7 +97,7 @@ body {
     border: 0.5px solid white;
     border-radius: 15px;
     padding: 15px;
-    width: 220px;
+    width: 110px;
     z-index: 100;
     opacity: 0;
     transform: translateY(-10px) scale(0.9);
