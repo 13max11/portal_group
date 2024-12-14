@@ -1,47 +1,62 @@
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: "DejaVu Sans Mono", monospace;
+    background-color: #0E141B;
 }
 
 .top-panel {
-    width: 100%;
-    background-color: #007BFF;
+    background-color: black;
     color: white;
-    padding: 10px 0;
+    border: 0.5px solid white;
+    border-radius: 15px;
+    padding: 15px 20px;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    gap: 10px; /* Відступи між кнопками */
+    justify-content: space-between;
+    margin: 15px;
+    position: relative;
 }
 
-form {
-    margin: 0;
+.left-section {
+    margin-right: auto;
+}
+
+.center-section {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-right: auto;
+}
+
+.right-section {
+    display: flex;
+    gap: 15px; /* Расстояние между кнопками */
 }
 
 .panel-button {
-    background-color: white;
-    color: #007BFF;
-    border: 1px solid #0056b3;
-    padding: 10px 20px;
-    border-radius: 5px;
+    color: #A0A0A0;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 5px 15px;
+    background: none;
+    border: none;
     cursor: pointer;
-    transition: background-color 0.3s;
+    border-radius: 5px;
+    transition: color 0.3s ease;
 }
 
 .panel-button:hover {
-    background-color: #0056b3;
     color: white;
 }
 
-.horizontal-line {
-    width: 100%;
-    height: 2px;
-    background-color: #ccc;
+.panel-button:focus {
+    outline: none;
 }
 
-/* Dropdown стилі */
 .dropdown {
     position: relative;
+    width: auto;
 }
 
 .dropdown-toggle {
@@ -52,16 +67,21 @@ form {
     display: flex;
     align-items: center;
     cursor: pointer;
+    color: #A0A0A0;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 5px 15px;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.dropdown-label:hover {
+    color: white;
 }
 
 .arrow {
-    margin-left: 10px;
-    width: 0;
-    height: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-top: 5px solid #007BFF;
-    transition: transform 0.3s;
+    margin-left: 5px;
+    font-size: 12px;
+    transition: transform 0.3s ease;
 }
 
 .dropdown-toggle:checked + .dropdown-label .arrow {
@@ -70,46 +90,74 @@ form {
 
 .dropdown-menu {
     display: none;
-    flex-direction: column;
-    gap: 5px;
     position: absolute;
-    top: 40px;
-    left: 0;
-    background-color: #007BFF;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    animation: slide-down 0.3s ease-out;
+    top: calc(100% + 5px);
+    right: 0;
+    background-color: #000000;
+    border: 0.5px solid white;
+    border-radius: 15px;
+    padding: 15px;
+    width: 110px;
+    z-index: 100;
+    opacity: 0;
+    transform: translateY(-10px) scale(0.9);
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.dropdown-menu .small-button {
-    background-color: white;
-    color: #007BFF;
-    border: 1px solid #0056b3;
-    padding: 5px 15px;
-    font-size: 12px;
-    border-radius: 3px;
+.dropdown-toggle:checked + .dropdown-label + .dropdown-menu {
+    display: block;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.small-button {
+    color: #A0A0A0;
+    text-align: left;
+    font-size: 14px;
+    padding: 10px 15px;
+    background: none;
+    border: none;
     cursor: pointer;
-    transition: background-color 0.3s;
+    display: block;
+    width: 100%;
+    border-radius: 5px;
+    transition: color 0.3s ease, background-color 0.3s ease;
 }
 
-.dropdown-menu .small-button:hover {
-    background-color: #0056b3;
+.small-button:hover {
     color: white;
 }
 
-.dropdown-toggle:checked ~ .dropdown-menu {
-    display: flex;
+/* Кнопка "Логін" */
+.login-button {
+    color: #211CBF; /* Основной цвет текста */
+    text-decoration: none;
+    font-size: 18px; /* Сделать текст побольше */
+    font-weight: bold;
+    padding: 5px 10px;
+    background: none; /* Убираем фон */
+    border: none;
+    cursor: pointer;
+    transition: color 0.3s ease;
 }
 
-/* Анімація */
-@keyframes slide-down {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.login-button:hover {
+    color: #322CF6; /* Цвет текста при наведении */
+}
+
+/* Кнопка "Реєстрація" */
+.register-button {
+    color: #CC0000; /* Основной цвет текста */
+    text-decoration: none;
+    font-size: 18px; /* Сделать текст побольше */
+    font-weight: bold;
+    padding: 5px 10px;
+    background: none; /* Убираем фон */
+    border: none;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.register-button:hover {
+    color: #FF3333; /* Цвет текста при наведении */
 }
