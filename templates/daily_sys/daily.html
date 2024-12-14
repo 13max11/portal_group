@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<body>
+    <h1>Your daily</h1>
+    <hr>
+
+    {% for lesson in lessons %}
+        <h2>{{lesson}}</h2>
+    {% endfor %}
+
+
+</body>
+</html>
+{% endblock %}

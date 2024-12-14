@@ -1,0 +1,9 @@
+modules = ["python-3.12", "web"]
+
+[nix]
+channel = "stable-24_05"
+
+[[ports]]
+localPort = 8000
+externalPort = 8000
+exposeLocalhost = true

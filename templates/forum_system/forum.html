@@ -48,7 +48,10 @@
 </body>
 
 {% block content %}
-<a href="{% url 'create-topic' %}">Create New Topic</a>
+
+<a href="{% url 'create-topic' %}">Створити нову тему</a>
+<h1>Категорії форуму</h1>
+
 
 <h1>Категорії</h1>
 {% if categories %}
@@ -61,6 +64,6 @@
         {% endfor %}
     </ul>
 {% else %}
-    <p>No categories available.</p>
+    <p>Не має доступних категорій.</p>
 {% endif %}
 {% endblock %}

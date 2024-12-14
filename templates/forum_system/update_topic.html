@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Edit Topic</h1>
+<h1>Змінити Тему</h1>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Save Changes</button>
+    <button type="submit">Зберегти Зміни</button>
 </form>
-<a href="{% url 'topic-detail' topic.id %}">Cancel</a>
+<a href="{% url 'topic-detail' topic.id %}">Відмінити</a>
 {% endblock %}
