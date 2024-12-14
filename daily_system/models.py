@@ -1,9 +1,27 @@
 from django.db import models
-from auth_sys import models as auth_models
 
-# Create your models here.
-class Grade(models.Model):
-    user = models.ManyToManyField(auth_models.CustomUser, related_name="Grade")
+
+class Lesson(models.Model):
+    date = models.DateTimeField()
+    theme = models.CharField(max_length=80)
+    presence = models.CharField(max_length=20, choices=[
+        ('present', "Present"),
+        ('missing', "Missing"),
+    ]) #відсутність чи присутністьь учня на уроці
+
+    def __str__(self):
+        return {self.theme} - {self.date}
+    
+    
+class Homework(models.Model):
     grade = models.IntegerField()
-    lesson_date = models.DateTimeField()# Дата уроку за яку вчитель ставить оцінку
-    creation_date = models.DateField(auto_now_add=True)# Дата дня в який читель поставив оцінку
+    homework = models.CharField(max_length=100)
+    status = models.CharField(max_length=20, choices=[
+        ('done', "Done"),
+        ('in_progress', "In progress"),
+        ('to_do', "To do"),
+    ]) #виконана чи невиконана домашка
+    file = models.FileField(upload_to="comments_media/", blank=True, null=True) #файл виконаного проекта
+
+    def __str__(self):
+        return self.homework
