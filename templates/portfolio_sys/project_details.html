@@ -1,14 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block title %}Портфоліо {{project.title}}{% endblock %}
 
-</head>
-<body>
-
+{% block content %}
     <h1> {{project.title}} </h1>
     <hr>
     {{project.file}}
@@ -16,8 +10,4 @@
     <p>Створено: {{project.creation_date}}</p>
     {{project.img}}
     {{project.video}}
-
-
-
-</body>
-</html>
+{% endblock %}
