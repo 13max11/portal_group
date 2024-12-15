@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>Forum</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/forum.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/forum.css' %}">
 </head>
 
 <body>
@@ -48,20 +48,67 @@
 </body>
 
 {% block content %}
-
-<a href="{% url 'create-topic' %}">Створити нову тему</a>
-
-<h1>Категорії</h1>
-{% if categories %}
-    <ul>
+<div class="forums-container">
+    <!-- Блок категорий -->
+    <div class="forums-block">
+        <h2 class="forums-block-title">Категорії</h2>
+        {% if categories %}
         {% for category in categories %}
-            <li>
-                <a href="{% url 'category-detail' category.id %}">{{ category.name }}</a>
-                <p>{{ category.description }}</p>
-            </li>
+        <a href="{% url 'category-detail' category.id %}" class="forums-category-item">
+            <div class="forums-category-item-title">{{ category.name }}</div>
+            <p class="forums-category-item-description">{{ category.description }}</p>
+        </a>
         {% endfor %}
-    </ul>
-{% else %}
-    <p>Не має доступних категорій.</p>
-{% endif %}
-{% endblock %}
+        {% else %}
+        <p>Не має доступних категорій.</p>
+        {% endif %}
+    </div>
+
+    <!-- Блок тем -->
+    <div class="forums-block">
+        <button class="forums-create-topic-btn" id="create-topic-btn">
+            <span class="forums-create-topic-icon" id="create-topic-icon">+</span>
+            Створити нову тему
+        </button>
+        {% if topics %}
+        {% for topic in topics %}
+        <div class="forums-topic-item">
+            <a href="{% url 'topic-detail' topic.id %}" class="forums-topic-item-title">{{ topic.title }}</a>
+            <p class="forums-topic-item-description">{{ topic.content|truncatewords:20 }}</p>
+            <p class="forums-topic-item-likes">Вподобати: {{ topic.likes_count }}</p>
+            <p class="forums-topic-item-date">Створено: {{ topic.created_at }}</p>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>Немає тем для обговорення в цій категорії.</p>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    const createTopicBtn = document.getElementById('create-topic-btn');
+    const createTopicIcon = document.getElementById('create-topic-icon');
+    
+    // Флаг, указывающий, идет ли сейчас анимация
+    let isRotating = false;
+    
+    // Анимация вращения при наведении мыши
+    createTopicBtn.addEventListener('mouseenter', () => {
+        if (!isRotating) {
+            isRotating = true;
+            createTopicIcon.classList.add('rotating');
+        }
+    });
+    
+    createTopicIcon.addEventListener('animationend', () => {
+        isRotating = false;
+        createTopicIcon.classList.remove('rotating');
+    });
+    
+    // Обработка клика, перенаправление по адресу
+    createTopicBtn.addEventListener('click', () => {
+        window.location.href = "{% url 'create-topic' %}";
+    });
+    </script>
+    {% endblock %}
+

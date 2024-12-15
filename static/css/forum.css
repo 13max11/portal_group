@@ -1,7 +1,169 @@
-h1 {
-    color: red;
+/* Контейнер для размещения блоков */
+.forums-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    width: calc(100% - 40px);
+    margin: 0 auto;
 }
 
-p {
+/* Общие стили для блоков */
+.forums-block {
+    background-color: black;
+    border: 0.5px solid white;
+    border-radius: 15px;
+    padding: 20px;
+    width: 48%;
+    box-sizing: border-box;
+}
+
+/* Заголовок блоков */
+.forums-block-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Категории */
+.forums-category-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #003366;
+    border: 0.5px solid white;
+    border-radius: 10px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
+    margin-bottom: 10px;
+}
+
+.forums-category-item:hover {
+    background-color: #004080;
+    box-shadow: 0 0 10px white;
+}
+
+.forums-category-item-title {
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    flex: 1;
+    text-align: left;
+}
+
+.forums-category-item-description {
     color: #5D8CB3;
+    font-size: 14px;
+    flex: 2;
+    text-align: right;
+}
+
+/* Кнопка для создания новой темы */
+.forums-create-topic-btn {
+    color: #CC0000;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 15px;
+    text-align: center;
+    border-radius: 10px;
+    transition: color 0.3s ease;
+    cursor: pointer;
+    display: block;
+    background: none;
+    border: none;
+    width: fit-content;
+    margin: 0 auto 20px auto;
+}
+
+.forums-create-topic-btn:hover {
+    color: #FF3399;
+}
+
+/* Стили тем */
+.forums-topic-item {
+    background-color: #16202C;
+    border: 0.5px solid white;
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.forums-topic-item-title {
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.forums-topic-item-description {
+    color: #5D8CB3;
+    font-size: 14px;
+}
+
+.forums-topic-item-likes {
+    color: #FF3333;
+    font-size: 14px;
+}
+
+.forums-topic-item-date {
+    color: #00CCCC;
+    font-size: 12px;
+    text-align: right;
+}
+
+/* Общие стили для кнопки */
+.forums-create-topic-btn {
+    color: #CC0000;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 15px;
+    text-align: center;
+    border-radius: 10px;
+    transition: color 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: none;
+    border: none;
+    width: fit-content;
+    margin: 0 auto 20px auto;
+    position: relative;
+}
+
+.forums-create-topic-btn:hover {
+    color: #FF3399;
+}
+
+/* Стили для плюсика */
+.forums-create-topic-icon {
+    font-size: 18px;
+    color: #CC0000;
+    transition: color 0.3s ease;
+}
+
+.forums-create-topic-btn:hover .forums-create-topic-icon {
+    color: #FF3399;
+}
+
+/* Анимация вращения */
+.forums-create-topic-icon.rotating {
+    animation: rotate-icon 0.8s ease-in-out;
+}
+
+@keyframes rotate-icon {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(180deg);
+    }
 }
