@@ -1,9 +1,8 @@
 from django import forms
-
+from .models import Lesson
 
 class LessonFilterForm(forms.Form):
     STATUS_CHOICES = [
-        ('', ''),
         ('present', 'Present'),
         ('missing', 'Missing'),]
     
@@ -12,8 +11,8 @@ class LessonFilterForm(forms.Form):
 
 class HomeworkFilterForm(forms.Form):
     STATUS_CHOICES = [
-        ('todo', 'To do'),
-        ('in_progress', 'In progress'),
-        ('done', 'Done'),]
+        ('done', "Done"),
+        ('in_progress', "In progress"),
+        ('to_do', "To do"),] 
    
-    status = forms.ChoiceField(choices = STATUS_CHOICES, required=False, label='status')
+    status = forms.ChoiceField(choices = STATUS_CHOICES, required=False, label='status') 
