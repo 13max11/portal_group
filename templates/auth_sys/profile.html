@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Профіль {{user.username}}{% endblock %}
+
+{% block content %}
+    <h2>Профіль: {{ user.username }}</h2>
+
+    <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+
+    <img src="{{ user.avatar.url }}" alt="Avatar" width="50">
+
+    {% if request.user.is_admin or request.user.is_superuser %}
+        <h3>Пошта: {{ user.email }}</h3>
+        <h3>Номер телефону: {{ user.phone_number }}</h3>
+    {% else %}
+        {% if user.email_show %}
+            <h3>Пошта: {{ user.email }}</h3>
+        {% endif %}
+        {% if user.phone_number_show %}
+            <h3>Номер телефону: {{ user.phone_number }}</h3>
+        {% endif %}
+    {% endif %}
+
+    <p>{{ user.description }}</p>
+
+    {% if request.user.is_admin or request.user.is_superuser or request.user == user %}
+        <!-- Form to edit profile -->
+        <form action="{% url 'profile-update' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Редагувати профіль</button>
+        </form>
+    {% endif %}
+{% endblock %}

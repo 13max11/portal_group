@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Category, Topic, Comment, Like
+from events_system.models import Event
 from django.contrib.auth.decorators import login_required
 #from django.contrib.auth.models import User
 from django.contrib import messages
@@ -12,6 +13,11 @@ from django.urls import reverse_lazy
 from .forms import TopicForm, CategoryForm, Category, PollForm, PollOptionForm
 from django.http import JsonResponse
 from .models import Topic, Poll, PollOption, PollVote
+
+from django.utils import timezone
+from datetime import timedelta
+from django.db.models import Count, Q
+
 
 @login_required
 def create_poll(request, topic_id):
@@ -198,20 +204,20 @@ class CategoryListView(ListView):
     context_object_name = 'categorys'
 
 def index(request):
-    categories = Category.objects.all()
+    events = Event.objects.filter(date_start__gte=timezone.now()).order_by('date_start')[:3]
+    one_week_ago = timezone.now() - timedelta(days=7)
+    
+    categories = Category.objects.annotate(
+        topic_count=Count('topics', filter=Q(topics__created_at__gte=one_week_ago))
+    ).order_by('-topic_count')[:5]
     form = None
 
-    # Только администратор может видеть и использовать форму
-    if request.user.is_staff:
-        if request.method == 'POST':
-            form = CategoryForm(request.POST)
-            if form.is_valid():
-                form.save()
-                return redirect('index')
-        else:
-            form = CategoryForm()
+    context = {
+        'categories': categories,
+        'events': events,
+    }
 
-    return render(request, 'forum_system/index.html')
+    return render(request, 'forum_system/index.html', context)
 
 def forum(request):
     categories = Category.objects.all()
@@ -230,6 +236,21 @@ def forum(request):
         'categories': categories,
         'form': form
     })
+
+def create_category(request):
+    if request.user.is_staff:
+        if request.method == 'POST':
+            form = CategoryForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return redirect('index')
+        else:
+            form = CategoryForm()
+    
+    else:
+        return redirect('forum')
+    
+    return render(request, 'forum_system/create_category.html', {'form':form})
 
 def update_topic(request, pk):
     topic = get_object_or_404(Topic, pk=pk)

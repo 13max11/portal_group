@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% block title %}{{topic.title}}{% endblock %}
+
 {% load custom_tags %}
 
 {% block content %}
@@ -13,11 +15,11 @@
 <form method="post">
     {% csrf_token %}
     <button type="submit" name="like">
-        {% if request.user in topic.likes.all %} Дивподобати {% else %} Like {% endif %}
+        {% if request.user in topic.likes.all %} Не подобається {% else %} Подобається {% endif %}
     </button>
 </form>
 
-<h2>Опитування</h2>
+<!-- <h2>Опитування</h2>
 {% for poll in topic.polls.all %}
     <div>
         <h3>{{ poll.name }}</h3>
@@ -50,7 +52,7 @@
 
 {% if request.user == topic.created_by %}
     <a href="{% url 'create-poll' topic.id %}">Створити опитування</a>
-{% endif %}
+{% endif %} -->
 
 <h2>Коментарі</h2>
 <ul>
