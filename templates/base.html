@@ -43,10 +43,11 @@
                 <a href="{% url 'login' %}" class="login-button"><b>Логін</b></a>
                 <a href="{% url 'register' %}" class="register-button"><b>Реєстрація</b></a>
             {% else %}
+                <a href="{% url 'profile' request.user.username %}">
                 <div class="user-field">
                     <img src="{{ request.user.avatar.url }}" alt="avatar" class="avatar">
-                    <a href="{% url 'profile' request.user.username %}" class="user-name">{{ request.user.username }}</a>
-                </div>
+                    <div class="user-name">{{ request.user.username }}</div>
+                </div></a>
             {% endif %}
         </div>
     </div>
