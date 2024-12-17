@@ -4,8 +4,6 @@
 <body>
     <h1>Your daily</h1>
     <hr>
-
-<<<<<<< HEAD
     <ul>
         {% for lesson in lessons %}
         <li>
@@ -20,19 +18,10 @@
         </form>
         <p><a href="{% url 'homework-detail' lesson.pk %}"> Homework: </a>
             {{lesson.grade}}</p>
-        -----------------------------------
         {% endfor %}
         
 
     </ul>
-
-    
-
-=======
-    {% for lesson in lessons %}
-        <h2>{{lesson}}</h2>
-    {% endfor %}
->>>>>>> 301c715cf2637abb8031b0c35d9cbceaf68cceae
 
 
 </body>
