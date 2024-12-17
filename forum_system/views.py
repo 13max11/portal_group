@@ -221,6 +221,7 @@ def index(request):
 
 def forum(request):
     categories = Category.objects.all()
+    topics = Topic.objects.all().order_by('?')[:3]
     form = None
 
     if request.user.is_staff:
@@ -232,10 +233,13 @@ def forum(request):
         else:
             form = CategoryForm()
 
-    return render(request, 'forum_system/forum.html', {
+    context = {
         'categories': categories,
-        'form': form
-    })
+        'topics': topics,
+        'form': form,
+    }
+
+    return render(request, 'forum_system/forum.html', context)
 
 def create_category(request):
     if request.user.is_staff:

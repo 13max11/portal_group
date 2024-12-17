@@ -70,7 +70,7 @@
             <span class="forums-create-topic-icon" id="create-topic-icon">+</span>
             Створити нову тему
         </button>
-        {% if topics %}
+        
         {% for topic in topics %}
         <div class="forums-topic-item">
             <a href="{% url 'topic-detail' topic.id %}" class="forums-topic-item-title">{{ topic.title }}</a>
@@ -78,10 +78,10 @@
             <p class="forums-topic-item-likes">Вподобати: {{ topic.likes_count }}</p>
             <p class="forums-topic-item-date">Створено: {{ topic.created_at }}</p>
         </div>
-        {% endfor %}
-        {% else %}
+        {% empty %}
+        
         <p>Немає тем для обговорення в цій категорії.</p>
-        {% endif %}
+        {% endfor %}
     </div>
 </div>
 

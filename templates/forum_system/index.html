@@ -32,7 +32,7 @@
 </div>
 
 {% for category in categories %}
-    <p><a href="{% url 'category-detail' category.pk %}">{{category.name}}</a></p>
+    <p><a href="{% url 'category-detail' category.pk %}">{{category.name}} [{{category.topic_count}}]</a></p>
 {% endfor %}
 
 
