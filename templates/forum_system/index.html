@@ -1,6 +1,40 @@
 {% extends 'base.html' %}
 
+{% block title %}Головна сторінка{% endblock %}
+
 {% block content %}
-<h1>Головна сторінка</h1>
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/main_page.css' %}">
+</head>
+
+
+<h1 class="head">Головна сторінка</h1>
+
+<div class="events_div">
+    <div class="events_title">
+        <h3>Події сайту</h3>
+    </div>
+    <div class="event-cards-field">
+        {% for event in events %}
+            <div class="event-cards">
+                <div class="event-cart-background" style="background: url('{{ event.img.url }}') no-repeat center/cover;"></div>
+                <img src="{{event.img.url}}" alt="event preview">
+                <h3>{{event.title}}</h3>
+                <h4>{{event.date_start.date}} - {{event.date_end.date}}</h4>
+            </div>
+        {% empty %}
+            <div class="not-events-message">
+                <h1>Наразі на сайті немає актуальних подій</h1>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% for category in categories %}
+    <p><a href="{% url 'category-detail' category.pk %}">{{category.name}}</a></p>
+{% endfor %}
+
+
 
 {% endblock %}

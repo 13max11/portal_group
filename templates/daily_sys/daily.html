@@ -4,10 +4,24 @@
 <body>
     <h1>Your daily</h1>
     <hr>
+    <ul>
+        {% for lesson in lessons %}
+        <li>
+            <p>{{lesson.date}}</p>
+            <p>Тема уроку: {{lesson.theme}}</p>
+            <p>{{status.presence}}</p>
+            
+        </li>
+        <form method="post">
+            {{ form.status.label_tag }}
+            {{ form.status}}
+        </form>
+        <p><a href="{% url 'homework-detail' lesson.pk %}"> Homework: </a>
+            {{lesson.grade}}</p>
+        {% endfor %}
+        
 
-    {% for lesson in lessons %}
-        <h2>{{lesson}}</h2>
-    {% endfor %}
+    </ul>
 
 
 </body>

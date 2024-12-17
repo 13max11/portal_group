@@ -4,3 +4,4 @@ from .models import Lesson, Homework
 
 admin.site.register(Lesson)
 admin.site.register(Homework)
+
