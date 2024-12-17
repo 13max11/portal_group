@@ -221,7 +221,7 @@ def index(request):
 
 def forum(request):
     categories = Category.objects.all()
-    topics = Topic.objects.all().order_by('?')[:3]
+    topics = Topic.objects.all().order_by('-created_at')[:3]
     form = None
 
     if request.user.is_staff:

@@ -1,67 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+
+{% block title %}Форум{% endblock %}
+
+
+{% block content %}
+
 <head>
-    <meta charset="UTF-8">
-    <title>Forum</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/forum.css' %}">
 </head>
 
-<body>
-    <div class="top-panel">
-        <!-- Левая секция -->
-        <div class="left-section">
-            <a href="{% url 'index' %}">
-                <button class="panel-button"><b>Головна</b></button>
-            </a>
-        </div>
-    
-        <!-- Центральная секция -->
-        <div class="center-section">
-            <a href="{% url 'forum' %}">
-                <button class="panel-button"><b>Форум</b></button>
-            </a>
-            <a href="{% url 'events-list' %}">
-                <button class="panel-button"><b>Події</b></button>
-            </a>
-            <div class="dropdown">
-                <input type="checkbox" id="toggle" class="dropdown-toggle">
-                <label for="toggle" class="panel-button dropdown-label">
-                    <b>Інше</b>
-                    <span class="arrow">▼</span>
-                </label>
-                <div class="dropdown-menu">
-                    <button class="small-button">Кнопка</button>
-                    <button class="small-button">Кнопка</button>
-                    <button class="small-button">Кнопка</button>
-                </div>
-            </div>
-        </div>
-    
-        <!-- Правая секция -->
-        <div class="right-section">
-            <a href="{% url 'login' %}" class="login-button"><b>Логін</b></a>
-            <a href="{% url 'register' %}" class="register-button"><b>Реєстрація</b></a>
-        </div>
-    </div>
-</body>
-
-{% block content %}
 <div class="forums-container">
     <!-- Блок категорий -->
     <div class="forums-block">
         <h2 class="forums-block-title">Категорії</h2>
-        {% if categories %}
         {% for category in categories %}
         <a href="{% url 'category-detail' category.id %}" class="forums-category-item">
             <div class="forums-category-item-title">{{ category.name }}</div>
             <p class="forums-category-item-description">{{ category.description }}</p>
         </a>
-        {% endfor %}
-        {% else %}
+        {% empty %}
         <p>Не має доступних категорій.</p>
-        {% endif %}
+        {% endfor %}
     </div>
 
     <!-- Блок тем -->
@@ -80,7 +40,7 @@
         </div>
         {% empty %}
         
-        <p>Немає тем для обговорення в цій категорії.</p>
+        <p>Немає тем для обговорення</p>
         {% endfor %}
     </div>
 </div>

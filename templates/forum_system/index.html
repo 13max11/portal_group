@@ -31,10 +31,18 @@
     </div>
 </div>
 
-{% for category in categories %}
-    <p><a href="{% url 'category-detail' category.pk %}">{{category.name}} [{{category.topic_count}}]</a></p>
-{% endfor %}
-
+<div class="forums-category-container">
+    <h1 class="head">Популярні категорії цього тижня</h1>
+    {% for category in categories %}
+        <a href="{% url 'category-detail' category.id %}" class="forums-category-item">
+            <div class="forums-category-item-left">
+                <div class="forums-category-item-title">{{ category.name }}</div>
+                <div class="forums-category-item-description">{{ category.description }}</div>
+            </div>
+            <p class="forums-category-item-topic-count"> створено тем в в цій категорії за останні сім днів: {{ category.topic_count }}</p>
+        </a>
+    {% endfor %}
+</div>
 
 
 {% endblock %}
