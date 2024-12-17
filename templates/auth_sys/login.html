@@ -3,11 +3,84 @@
 {% block title %}Вхід до акаунту{% endblock %}
 
 {% block content %}
-<h2>Вхід в акаунту</h2>
+<h2>Вхід в акаунт</h2>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Login</button>
+    <button type="submit">Вхід</button>
 </form>
 <a href="{% url 'register' %}">Немає акаунту? Ти можеш створити його тут</a>
+
+<style>
+    body {
+        margin: 0;
+        font-family: "DejaVu Sans Mono", monospace;
+        background-color: #0E141B;
+    }
+
+    h2 {
+        color: #A0A0A0;
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 28px;
+    }
+
+    form {
+        background-color: #1E212D;
+        border-radius: 10px;
+        padding: 30px;
+        max-width: 450px;
+        margin: 50px auto;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+    }
+
+    form input {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        border-radius: 5px;
+        border: 1px solid #3A3F54;
+        background-color: #2A2E3C;
+        color: #A0A0A0;
+        font-size: 16px;
+    }
+
+    form input:focus {
+        outline: none;
+        border-color: #322CF6;
+        background-color: #2A2E3C;
+    }
+
+    button[type="submit"] {
+        background-color: #211CBF;
+        color: white;
+        cursor: pointer;
+        font-weight: bold;
+        padding: 12px;
+        border-radius: 5px;
+        border: none;
+        font-size: 16px;
+        width: 100%;
+        transition: background-color 0.3s ease;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #322CF6;
+    }
+
+    a {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+        color: #A0A0A0;
+        font-size: 16px;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    a:hover {
+        color: white;
+    }
+</style>
+
 {% endblock %}

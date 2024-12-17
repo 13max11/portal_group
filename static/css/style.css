@@ -161,7 +161,6 @@ p {
     cursor: pointer;
     transition: color 0.3s ease;
 }
-
 .register-button:hover {
     color: #FF3333; /* Цвет текста при наведении */
 }
