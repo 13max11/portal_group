@@ -204,7 +204,7 @@ class CategoryListView(ListView):
     context_object_name = 'categorys'
 
 def index(request):
-    events = Event.objects.filter(date_start__gte=timezone.now()).order_by('date_start')[:3]
+    events = Event.objects.filter(date_end__gte=timezone.now()).order_by('date_end','date_start')[:3]
     one_week_ago = timezone.now() - timedelta(days=7)
     
     categories = Category.objects.annotate(
