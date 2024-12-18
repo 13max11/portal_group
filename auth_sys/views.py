@@ -1,15 +1,16 @@
 from django.contrib.auth import update_session_auth_hash
 from django.core.files.storage import FileSystemStorage
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import CreateView, ListView, TemplateView
-from .models import CustomUser
+from .models import CustomUser, Project
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, PortfolioForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.urls import reverse_lazy
-from .forms import ProfileUpdateForm, ChangePasswordForm, ChangeAvatarForm, ChangeEmailForm, ChangePhoneNumberForm, ChangeDescriptionForm
+from django.http import HttpResponseForbidden, JsonResponse
+from django.contrib.auth import get_user_model
 
 
 class AuthPageView(TemplateView):
@@ -38,73 +39,49 @@ def logout_view(request):
 
 @login_required
 def profile_view(request, username):
-    user = CustomUser.objects.get(username=username)
-    context = {
-        'user': user
-    }
-    return render(request, 'auth_sys/profile.html', context)
+    User = get_user_model()
+    profile_user = get_object_or_404(User, username=username)
+    return render(request, 'auth_sys/profile.html', {'profile_user': profile_user})
 
 @login_required
 def profile_update(request):
-    user = request.user
     if request.method == 'POST':
-        form = ProfileUpdateForm(request.POST, instance=user)
+        user = request.user
+        
+        if 'first_name' in request.POST:
+            user.first_name = request.POST['first_name']
+        if 'last_name' in request.POST:
+            user.last_name = request.POST['last_name']
+        if 'email' in request.POST:
+            user.email = request.POST['email']
+        if 'phone_number' in request.POST:
+            user.phone_number = request.POST['phone_number']
+        if 'description' in request.POST:
+            user.description = request.POST['description']
+        if 'avatar' in request.FILES:
+            user.avatar = request.FILES['avatar']
+
+        user.save()
+        messages.success(request, 'Профіль успішно оновлено!')
+        
+    return redirect('profile', username=request.user.username)
+
+
+@login_required
+def portfolio_view(request):
+    portfolio_items = Project.objects.filter(user=request.user)
+    return render(request, 'auth_sys/portfolio.html', {'portfolio_items': portfolio_items})
+
+@login_required
+def portfolio_add(request):
+    if request.method == 'POST':
+        form = PortfolioForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect('profile-view')  # Після збереження редіректимо на профіль
+            project = form.save(commit=False)
+            project.user = request.user
+            project.save()
+            return redirect('portfolio')
     else:
-        form = ProfileUpdateForm(instance=user)
-    return render(request, 'auth_sys/profile_update.html', {'form': form})
+        form = PortfolioForm()
+    return render(request, 'auth_sys/portfolio.html', {'form': form})
 
-@login_required
-def change_password(request):
-    if request.method == 'POST':
-        form = ChangePasswordForm(request.user, request.POST)
-        if form.is_valid():
-            user = form.save()
-            update_session_auth_hash(request, user)  # Оновлюємо сесію після зміни пароля
-            return redirect('profile-view')  # Перенаправляємо на профіль після зміни пароля
-    else:
-        form = ChangePasswordForm(request.user)
-
-@login_required
-def change_avatar(request):
-    if request.method == 'POST' and request.FILES['avatar']:
-        avatar = request.FILES['avatar']
-        fs = FileSystemStorage()
-        filename = fs.save(avatar.name, avatar)
-        user = request.user
-        user.avatar = filename  # Оновлюємо аватар
-        user.save()
-        return redirect('profile-view')
-    return render(request, 'change_avatar.html')
-
-@login_required
-def change_email(request):
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        user = request.user
-        user.email = email
-        user.save()
-        return redirect('profile-view')
-    return render(request, 'change_email.html')
-
-@login_required
-def change_phone_number(request):
-    if request.method == 'POST':
-        phone_number = request.POST.get('phone_number')
-        user = request.user
-        user.phone_number = phone_number
-        user.save()
-        return redirect('profile-view')
-    return render(request, 'change_phone_number.html')
-
-@login_required
-def change_description(request):
-    if request.method == 'POST':
-        description = request.POST.get('description')
-        user = request.user
-        user.description = description
-        user.save()
-        return redirect('profile-view')
-    return render(request, 'change_description.html')

@@ -1,32 +1,21 @@
 from django.contrib.auth.forms import UserCreationForm
-from .models import CustomUser
+from .models import CustomUser, Project
+from django import forms
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = CustomUser
         fields = UserCreationForm.Meta.fields + ("first_name", "last_name", "email")
 
-
-from django import forms
-from django.contrib.auth.models import User
-
-class ProfileUpdateForm(forms.ModelForm):
+class ProfileForm(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ['first_name', 'last_name', 'email', 'phone_number', 'description', 'avatar']
+        fields = ['first_name', 'last_name', 'email', 'phone_number', 'description']
 
-class ChangePasswordForm(forms.Form):
-    current_password = forms.CharField(widget=forms.PasswordInput)
-    new_password = forms.CharField(widget=forms.PasswordInput)
-
-class ChangeAvatarForm(forms.Form):
+class AvatarForm(forms.Form):
     avatar = forms.ImageField()
 
-class ChangeEmailForm(forms.Form):
-    email = forms.EmailField()
-
-class ChangePhoneNumberForm(forms.Form):
-    phone_number = forms.CharField()
-
-class ChangeDescriptionForm(forms.Form):
-    description = forms.CharField(widget=forms.Textarea)
+class PortfolioForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ['title', 'description', 'media']

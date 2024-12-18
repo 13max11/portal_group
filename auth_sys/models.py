@@ -16,3 +16,15 @@ class CustomUser(AbstractUser):
 
     def __str__(self) -> str:
         return self.username
+    
+
+class Project(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
+    media = models.FileField(upload_to='media/images/portfolio/', null=True, blank=True)
+
+    def __str__(self) -> str:
+        return self.title
+
+

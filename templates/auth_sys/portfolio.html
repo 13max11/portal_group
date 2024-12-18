@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Portfolio</h1>
+<div class="add-portfolio-item">
+    <h2>Додати новий елемент портфоліо</h2>
+
+    <form method="post" action="{% url 'portfolio-add' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="title">Назва:</label>
+            <input type="text" id="title" name="title" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Опис:</label>
+            <textarea id="description" name="description" rows="4"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="media">Додати медіафайли:</label>
+            <input type="file" id="media" name="media" multiple accept="image/*,video/*">
+            <small>Можна вибрати декілька файлів. Підтримуються зображення та відео.</small>
+        </div>
+
+        <div class="preview-container">
+            <h3>Попередній перегляд:</h3>
+            <div id="media-preview"></div>
+        </div>
+
+        <button type="submit" class="submit-btn">Додати до портфоліо</button>
+    </form>
+</div>
+
+<div class="portfolio-items">
+    <h2>Мої роботи</h2>
+    
+    {% if portfolio_items %}
+        <div class="portfolio-grid">
+            {% for item in portfolio_items %}
+                <div class="portfolio-item">
+                    <h3>{{ item.title }}</h3>
+                    <div class="media-container">
+                        {% if item.media %}
+                            {% with file_ext=item.media.name|lower %}
+                                {% if '.jpg' in file_ext or '.jpeg' in file_ext or '.png' in file_ext %}
+                                    <img src="{{ item.media.url }}" alt="{{ item.title }}">
+                                {% else %}
+                                    <video controls>
+                                        <source src="{{ item.media.url }}" type="video/mp4">
+                                        Ваш браузер не підтримує відео.
+                                    </video>
+                                {% endif %}
+                            {% endwith %}
+                        {% endif %}
+                    </div>
+                    <p>{{ item.description }}</p>
+                    {% if request.user == item.user %}
+                        <div class="item-controls">
+                            <button onclick="editItem({{ item.id }})" class="edit-btn">Редагувати</button>
+                            <button onclick="deleteItem({{ item.id }})" class="delete-btn">Видалити</button>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>У вас поки немає робіт у портфоліо.</p>
+    {% endif %}
+</div>
+
+<script>
+    document.getElementById('media').addEventListener('change', function(event) {
+        const preview = document.getElementById('media-preview');
+        preview.innerHTML = '';
+        
+        for(let file of event.target.files) {
+            if(file.type.startsWith('image/')) {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.height = 100;
+                preview.appendChild(img);
+            } else if(file.type.startsWith('video/')) {
+                const video = document.createElement('video');
+                video.src = URL.createObjectURL(file);
+                video.height = 100;
+                video.controls = true;
+                preview.appendChild(video);
+            }
+        }
+    });
+
+    function editItem(itemId) {
+        window.location.href = `/portfolio/edit/${itemId}/`;
+    }
+
+    function deleteItem(itemId) {
+        if(confirm('Ви впевнені, що хочете видалити цей елемент?')) {
+            fetch(`/portfolio/delete/${itemId}/`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            }).then(response => {
+                if(response.ok) {
+                    window.location.reload();
+                }
+            });
+        }
+    }
+</script>
+
+{% endblock %}
