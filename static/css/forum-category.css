@@ -1,0 +1,140 @@
+/* Общий контейнер */
+.category-container {
+    background-color: black;
+    border: 0.5px solid white;
+    border-radius: 15px;
+    padding: 20px;
+    width: 50%;
+    margin: 40px auto;
+    box-sizing: border-box;
+    position: relative;
+    text-align: center;
+}
+
+/* Название и описание категории */
+.category-header {
+    background: linear-gradient(180deg, #004080, transparent);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: white;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 0 15px #004080;
+}
+
+/* Заголовок категории */
+.category-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+/* Описание категории */
+.category-description {
+    font-size: 16px;
+}
+
+/* Заголовок тем */
+.category-topics-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    margin: 20px 0;
+}
+
+/* Список тем */
+.category-topics-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.category-topics-list li {
+    margin-bottom: 10px;
+}
+
+/* Кликабельный блок темы */
+.topic-card {
+    display: flex; /* Используем Flexbox */
+    justify-content: space-between; /* Название слева, описание справа */
+    align-items: center;
+    text-decoration: none;
+    color: white;
+    background-color: #16202C;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Эффект наведения */
+.topic-card:hover {
+    background-color: #003366;
+    box-shadow: 0 4px 10px #0066CC;
+}
+
+/* Содержимое блока темы */
+.topic-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+/* Название темы */
+.topic-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Описание темы */
+.topic-description {
+    font-size: 14px;
+    margin: 0;
+    text-align: right; /* Описание располагается справа */
+}
+
+
+/* Стиль значка + */
+.create-topic-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: #CC0000;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 10px;
+    transition: color 0.3s ease;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center; /* Центрирование содержимого */
+}
+
+.create-topic-btn:hover {
+    color: #FF3399;
+}
+
+/* Стиль значка + */
+.plus {
+    display: inline-block;
+    transition: transform 0.3s ease;
+    margin-right: 5px;
+    transform-origin: center;
+}
+
+/* Анимация вращения */
+@keyframes rotate-plus {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

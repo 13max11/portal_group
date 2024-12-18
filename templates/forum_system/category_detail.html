@@ -4,18 +4,59 @@
 
 {% block content %}
 
-<h1>{{ category.name }}</h1>
-<p>{{ category.description }}</p>
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/forum-category.css' %}">
+</head>
 
-{% if topics %}
-    <ul>
-        {% for topic in topics %}
-            <li><a href="{% url 'topic-detail' topic.id %}">{{ topic.title }}</a></li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>Немає тем для обговорення в цій категорії.</p>
-{% endif %}
+<div class="category-header">
+    <h1 class="category-title">{{ category.name }}</h1>
+    <p class="category-description">{{ category.description }}</p>
+</div>
 
-<a href="{% url 'create-topic' %}">+ Створити нову тему</a>
+<div class="category-container">
+    <a href="{% url 'create-topic' %}" class="create-topic-btn">
+        <span class="plus">+</span> Створити нову тему
+    </a>
+    <p class="category-topics-title">Теми в цій категорії:</p>
+    {% if topics %}
+        <ul class="category-topics-list">
+            {% for topic in topics %}
+                <li>
+                    <a href="{% url 'topic-detail' topic.id %}" class="topic-card">
+                        <div class="topic-content">
+                            <h3 class="topic-title">{{ topic.title }}</h3>
+                            <p class="topic-description">{{ topic.content|truncatechars:50 }}</p>
+                        </div>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Немає тем для обговорення в цій категорії.</p>
+    {% endif %}
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const plus = document.querySelector(".plus");
+        const btn = document.querySelector(".create-topic-btn");
+
+        btn.addEventListener("mouseenter", function () {
+            // Проверяем, чтобы анимация не начиналась заново
+            if (!plus.classList.contains("rotating")) {
+                plus.classList.add("rotating");
+                plus.style.animation = "rotate-plus 1s ease-out forwards";
+                
+                plus.addEventListener("animationend", function handler() {
+                    plus.classList.remove("rotating");
+                    plus.style.animation = "";
+                    plus.removeEventListener("animationend", handler);
+                });
+            }
+        });
+    });
+</script>
+
 {% endblock %}

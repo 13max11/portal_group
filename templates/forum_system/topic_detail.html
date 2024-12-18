@@ -6,18 +6,90 @@
 
 {% block content %}
 
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/forum-topic.css' %}">
+</head>
 
-<h1>{{ topic.title }}</h1>
-<p>{{ topic.content|linebreaks }}</p>
-<p>Створено: {{ topic.created_by }}</p>
-<p>Вподобати: {{ likes_count }}</p>
+<!-- Профиль пользователя слева сверху от основного блока -->
+<!-- Аватар и пользователь -->
+<a href="{% url 'profile' request.user.username %}">
+    <div class="topics-user-field">
+        <img src="{{ request.user.avatar.url }}" alt="avatar" class="topics-avatar">
+        <div class="topics-user-name">{{ request.user.username }}</div>
+    </div>
+</a>
 
-<form method="post">
-    {% csrf_token %}
-    <button type="submit" name="like">
-        {% if request.user in topic.likes.all %} Не подобається {% else %} Подобається {% endif %}
-    </button>
-</form>
+<!-- Основной блок информации о topic -->
+<div class="topics-main-container">
+    <div class="topics-content">
+        <h1 class="topics-title">{{ topic.title }}</h1>
+        <p class="topics-description">{{ topic.content|linebreaks }}</p>
+        <p class="topics-created">Створено: <span>{{ topic.created_by }}</span></p>
+        <p class="topics-likes">Сподобалося: <span>{{ likes_count }}</span></p>
+    </div>
+</div>
+
+<!-- Интерфейс с кнопкой Лайк и Комментарии -->
+<div class="topics-interaction-container">
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" name="like" class="topics-like-btn">
+            {% if request.user in topic.likes.all %}
+                👍 Не подобається
+            {% else %}
+                ❤️ Подобається
+            {% endif %}
+        </button>
+    </form>
+
+    <button class="topics-comment-btn">💬</button>
+</div>
+
+<!-- Секция для ввода комментариев с анимацией -->
+<div class="topics-comment-section">
+    <form method="post">
+        {% csrf_token %}
+        <textarea name="content" class="topics-comment-input" rows="3" required placeholder="Напишіть ваш коментар" maxlength="1200"></textarea>
+        <button type="submit" name="comment" class="topics-add-comment-btn">Додати коментарії</button>
+    </form>
+</div>
+
+<!-- Дополнительный блок с комментариями справа -->
+<div class="topics-side-comments">
+    <h2>Коментарі</h2>
+    <ul>
+        {% for comment in comments %}
+            <li>
+                <strong>{{ comment.created_by.username }} {% if comment.created_by.pk == topic.created_by.pk %} [OP] {% endif %} :</strong>
+                {{ comment.content }}
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- Кнопки для редактирования и удаления -->
+<div class="topics-actions">
+    {% if request.user == topic.created_by %}
+        <a href="{% url 'update-topic' topic.id %}" class="topics-edit-btn">Змінити</a>
+        <a href="{% url 'delete-topic' topic.pk %}" class="topics-delete-btn">Видалити</a>
+    {% endif %}
+</div>
+
+<!-- Кнопка возврата назад -->
+<a href="{% url 'category-detail' topic.category.id %}" class="topics-back-btn">Повернутися до категорій</a>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const commentBtn = document.querySelector('.topics-comment-btn');
+        const commentSection = document.querySelector('.topics-comment-section');
+
+        commentBtn.addEventListener('click', () => {
+            commentSection.style.display = commentSection.style.display === 'block' ? 'none' : 'block';
+        });
+    });
+</script>
 
 <!-- <h2>Опитування</h2>
 {% for poll in topic.polls.all %}
@@ -53,31 +125,4 @@
 {% if request.user == topic.created_by %}
     <a href="{% url 'create-poll' topic.id %}">Створити опитування</a>
 {% endif %} -->
-
-<h2>Коментарі</h2>
-<ul>
-    {% for comment in comments %}
-    <li>
-        <strong>{{ comment.created_by.username }} {% if comment.created_by.pk == topic.created_by.pk %} [OP] {% endif %} :</strong>
-        {{ comment.content }}
-    </li>
-    {% endfor %}
-</ul>
-
-{% if request.user.is_authenticated %}
-<form method="post">
-    {% csrf_token %}
-    <textarea name="content" rows="3" required></textarea><br>
-    <button type="submit" name="comment">Додати коментарії</button>
-    {% if request.user == topic.created_by %}
-        <a href="{% url 'update-topic' topic.id %}">Змінити</a>
-        <a href="{% url 'delete-topic' topic.pk %}">Видалити</a>
-    {% endif %}
-</form>
-{% else %}
-    <p>Ви маєте бути автентифікованим.</p>
-{% endif %}
-
-<a href="{% url 'category-detail' topic.category.id %}">Повернутися до категорій</a>
-
 {% endblock %}
