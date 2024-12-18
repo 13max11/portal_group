@@ -8,6 +8,10 @@ p {
     color: #5D8CB3;
 }
 
+.head {
+    text-align: center;
+}
+
 .top-panel {
     background-color: black;
     color: white;
@@ -110,6 +114,10 @@ p {
     opacity: 0;
     transform: translateY(-10px) scale(0.9);
     transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.dropdown-menu>a {
+    text-decoration: none;
 }
 
 .dropdown-toggle:checked + .dropdown-label + .dropdown-menu {

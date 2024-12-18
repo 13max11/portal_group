@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Створення фото для галереї{% endblock %}
+
+{% block content %}
+
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/gallery.css' %}">
+</head>
+
+<div class="gallery">
+    <h1 class="head">Створення фото для галереї</h1>
+    <form action="{% url 'gallery-create' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">створити</button>
+    </form>
+</div>
+
+{% endblock %}
