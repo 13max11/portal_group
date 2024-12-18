@@ -13,6 +13,22 @@ class TopicForm(forms.ModelForm):
         model = Topic
         fields = ['category', 'title', 'content']
 
+    def __init__(self, *args, **kwargs):
+        super(TopicForm, self).__init__(*args, **kwargs)
+        self.fields['category'].widget.attrs.update({
+            'class': 'topics-select',
+        })
+        self.fields['title'].widget.attrs.update({
+            'class': 'topics-input',
+            'maxlength': '20',
+            'placeholder': 'Введіть тему',
+        })
+        self.fields['content'].widget.attrs.update({
+            'class': 'topics-textarea',
+            'maxlength': '1500',
+            'placeholder': 'Напишіть обсяг...',
+        })
+
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
