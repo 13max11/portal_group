@@ -38,7 +38,7 @@
 
 /* Поле ввода темы */
 .topics-input {
-    width: 100%;
+    width: 98%;
     padding: 8px;
     border: 1px solid #5D8CB3;
     border-radius: 5px;
@@ -48,7 +48,7 @@
 
 /* Поле ввода обсяга */
 .topics-textarea {
-    width: 100%;
+    width: 98%;
     padding: 8px;
     border: 1px solid #5D8CB3;
     border-radius: 5px;
@@ -71,4 +71,17 @@
 
 .topics-submit-btn:hover {
     background-color: #2aae2a;
+}
+
+.topics-cancel-btn {
+    display: block;
+    margin: 10px 0 0;
+    color: #ff0000;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.topics-cancel-btn:hover {
+    color: #ff6666;
 }

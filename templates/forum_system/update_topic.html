@@ -3,11 +3,40 @@
 {% block title %}Оновлення топіку{% endblock %}
 
 {% block content %}
-<h1>Змінити Тему</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Зберегти Зміни</button>
-</form>
-<a href="{% url 'topic-detail' topic.id %}">Відмінити</a>
+
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/forum-create.css' %}">
+</head>
+
+<!-- Заголовок слева над блоком -->
+<div class="topics-header-container">
+    <h1 class="topics-header">Змінити Тему</h1>
+</div>
+
+<!-- Основной блок с формой -->
+<div class="topics-main-container">
+    <form method="post">
+        {% csrf_token %}
+        <div class="topics-form-group">
+            <!-- Select-категория -->
+            <label for="{{ form.category.id_for_label }}">Категорії</label>
+            {{ form.category }}
+        </div>
+        <div class="topics-form-group">
+            <!-- Поле редактирования title -->
+            <label for="{{ form.title.id_for_label }}">Тема</label>
+            {{ form.title }}
+        </div>
+        <div class="topics-form-group">
+            <!-- Поле редактирования content -->
+            <label for="{{ form.content.id_for_label }}">Обсяг</label>
+            {{ form.content }}
+        </div>
+        <!-- Кнопка сохранения -->
+        <button type="submit" class="topics-submit-btn">Зберегти Зміни</button>
+    </form>
+    <!-- Кнопка отмены -->
+    <a href="{% url 'topic-detail' topic.id %}" class="topics-cancel-btn">Відмінити</a>
+</div>
 {% endblock %}
