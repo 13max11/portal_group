@@ -1,0 +1,200 @@
+.topics-user-field {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    border: solid 1px #2a2a2a;
+    background-color: #40404e;
+    padding: 5px 10px;
+}
+
+.topics-avatar {
+    object-fit: cover;
+    border-radius: 8px;
+    width: 30px;
+    height: 30px;
+}
+
+.topics-user-name {
+    color: #5D8CB3;
+    margin-left: 10px;
+}
+
+/* Основной блок информации topic */
+.topics-main-container {
+    background-color: black;
+    border: 0.5px solid white;
+    border-radius: 15px;
+    padding: 20px;
+    width: 60%;
+    margin: 60px 20px 0;
+    color: #5D8CB3;
+    position: relative;
+}
+
+.topics-content {
+    text-align: left;
+}
+
+.topics-title {
+    color: white;
+    font-size: 22px;
+}
+
+.topics-description {
+    margin: 8px 0;
+}
+
+.topics-created,
+.topics-likes {
+    font-size: 14px;
+}
+
+/* Блок с комментариями слева */
+.topics-side-comments {
+    background-color: black;
+    border: 0.5px solid white;
+    border-radius: 10px;
+    padding: 10px;
+    width: 30%;
+    margin: 60px 20px 0 20px;
+    color: #5D8CB3;
+    position: relative;
+    max-height: 400px; /* Опционально: если вы хотите ограничить по высоте */
+    overflow-y: auto; /* Добавляем прокрутку, если комментариев много */
+}
+
+.topics-side-comments ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.topics-side-comments li {
+    word-wrap: break-word; /* Обрезка текста, если слишком длинный */
+    max-width: 100%; /* Оградиваем комментарии в пределах родительского блока */
+    margin-bottom: 8px;
+    line-height: 1.5;
+    color: #5D8CB3;
+}
+
+.topics-side-comments h2 {
+    text-align: center;
+    color: white;
+}
+
+/* Интерактивный блок с кнопкой Лайк и комментариями */
+.topics-interaction-container {
+    display: flex;
+    justify-content: space-around;
+    background-color: black;
+    border: 0.5px solid white;
+    border-radius: 15px;
+    padding: 10px;
+    width: 60%;
+    margin: 10px auto;
+}
+
+.topics-like-btn {
+    background: none;
+    border: none;
+    color: #CC0000;
+    font-size: 16px;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.topics-like-btn:hover {
+    color: #FF3333;
+    transform: scale(1.1);
+}
+
+.topics-comment-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #5D8CB3;
+    cursor: pointer;
+}
+
+/* Анимация появления комментариев */
+.topics-comment-section {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 60%;
+    margin: 10px auto;
+    padding: 10px;
+    background-color: black;
+    border: 0.5px solid white;
+    border-radius: 10px;
+    animation: showComment 0.5s ease-in-out;
+}
+
+.topics-comment-input {
+    width: 98%;
+    height: 50px; /* Статическая высота поля ввода */
+    padding: 5px; /* Уменьшенный отступ */
+    border: 1px solid #5D8CB3;
+    color: #5D8CB3;
+    border-radius: 5px;
+    resize: none; /* Отключаем возможность изменять размер */
+}
+
+.topics-add-comment-btn {
+    color: #5D8CB3;
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* Анимация появления поля комментариев */
+@keyframes showComment {
+    0% {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Кнопки действия */
+.topics-actions .topics-edit-btn,
+.topics-actions .topics-delete-btn {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    padding: 8px 12px;
+}
+
+.topics-edit-btn {
+    color: #0066CC;
+}
+
+.topics-edit-btn:hover {
+    color: #3399FF;
+}
+
+.topics-delete-btn {
+    color: #CC0000;
+}
+
+.topics-delete-btn:hover {
+    color: #FF3333;
+}
+
+/* Кнопка возврата назад */
+.topics-back-btn {
+    display: block;
+    margin: 20px auto;
+    color: #5D8CB3;
+    text-decoration: none;
+    text-align: center;
+}
