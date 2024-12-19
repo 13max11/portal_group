@@ -4,7 +4,7 @@
     border: 0.5px solid white;
     border-radius: 15px;
     padding: 20px;
-    width: 90%;
+    width: 50%;
     margin: 40px auto;
     box-sizing: border-box;
     position: relative;
@@ -58,6 +58,7 @@
 
 /* Кликабельный блок темы */
 .topic-card {
+    width: 96%;
     display: flex; /* Используем Flexbox */
     justify-content: space-between; /* Название слева, описание справа */
     align-items: center;
