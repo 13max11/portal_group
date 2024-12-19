@@ -21,7 +21,12 @@
                 <a href="{% url 'profile' topic.created_by.username %}"><img src="{{ topic.created_by.avatar.url }}" alt="avatar" class="topics-avatar"></a>
                 <div class="topic-head-right">
                     <div class="topic-head-top">
-                        <a href="{% url 'category-detail' topic.category.pk %}"><h3>{{ topic.category.name }}</h3></a>
+                        <a href="{% url 'category-detail' topic.category.pk %}"><h3>{{ topic.category.name }}</h3></a> 
+                        <h5> ● {{topic.created_at}}</h5>
+
+                        {% if topic.updated %}
+                            <h5 style="margin-left: auto;">змінено</h5>
+                        {% endif %}
                     </div>
                     <div class="topic-head-bottom">
                         <a href="{% url 'profile' topic.created_by.username %}"><p>{{ topic.created_by.username }}</p></a>

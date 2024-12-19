@@ -37,8 +37,9 @@
         <a href="{% url 'topic-detail' topic.id %}" class="forums-topic-item">
             <div class="forums-topic-item-title">{{ topic.title }}</div>
             <p class="forums-topic-item-description">Опис: {{ topic.content|truncatechars:50 }}</p>
-            <p class="forums-topic-item-likes">Сподобалось: {{ topic.likes_count }}</p>
-            <p class="forums-topic-item-date">Створено: {{ topic.created_at }}</p>
+            <div class="topic-bottom-container">
+                <p class="forums-topic-item-date">Створено: {{ topic.created_at }}</p>
+            </div>
         </a>
         {% empty %}
         <p>Немає тем для обговорення</p>

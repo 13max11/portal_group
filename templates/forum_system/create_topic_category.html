@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Створення топіку в {{category.name}}{% endblock %}
+
+{% block content %}
+
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/forum-create.css' %}">
+</head>
+
+<!-- Заголовок сверху слева -->
+<div class="topics-header-container">
+    <h1 class="topics-header">Створення теми в {{category.name}}:</h1>
+</div>
+
+<!-- Основной блок с формой -->
+<div class="topics-main-container">
+    <form method="post">
+        {% csrf_token %}
+        <div class="topics-form-group">
+            <!-- Поле ввода title -->
+            <label for="{{ form.title.id_for_label }}">Тема</label>
+            {{ form.title }}
+        </div>
+        <div class="topics-form-group">
+            <!-- Поле ввода content -->
+            <label for="{{ form.content.id_for_label }}">Обсяг</label>
+            {{ form.content }}
+        </div>
+        <!-- Кнопка submit -->
+        <button type="submit" class="topics-submit-btn">Створити тему</button>
+    </form>
+</div>
+
+<!-- {% if topic %}
+    <hr>
+
+    <h2>Створити голосування</h2>
+    <form method="post" action="{% url 'create-poll' topic.id %}">
+        {% csrf_token %}
+        <label for="poll_title">Назва опитування:</label>
+        <input type="text" name="poll_title" id="poll_title" required><br>
+
+        <label for="poll_description">Детальніше про опитування:</label>
+        <textarea name="poll_description" id="poll_description" rows="4" required></textarea><br>
+
+        <button type="submit">Створити опитування</button>
+    </form>
+
+    {% if poll %}
+        <hr>
+        <h2>Існуюче опитування: {{ poll.title }}</h2>
+        <p>{{ poll.description }}</p>
+
+        <h3>Варіанти відповідей</h3>
+        <ul>
+            {% for option in poll.options.all %}
+            <li>
+                {{ option.text }}
+                <form method="post" action="{% url 'delete-poll-option' option.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Видалити</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <form method="post" action="{% url 'add-poll-option' poll.id %}">
+            {% csrf_token %}
+            <label for="option_text">Нова можлива відповідь:</label>
+            <input type="text" name="option_text" id="option_text" required>
+            <button type="submit">Додати можливу відповідь</button>
+        </form>
+
+        <form method="post" action="{% url 'delete-poll' poll.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Видалити опитування</button>
+        </form>
+    {% endif %} -->
+
+{% endif %}
+
+{% endblock %}

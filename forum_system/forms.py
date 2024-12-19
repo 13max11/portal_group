@@ -29,6 +29,35 @@ class TopicForm(forms.ModelForm):
             'placeholder': 'Напишіть обсяг...',
         })
 
+class TopicCategoryForm(forms.ModelForm):
+
+    class Meta:
+        model = Topic
+        fields = ['title', 'content']
+
+    def __init__(self, *args, **kwargs):
+        super(TopicCategoryForm, self).__init__(*args, **kwargs)
+        self.fields['title'].widget.attrs.update({
+            'class': 'topics-input',
+            'maxlength': '72',
+            'placeholder': 'Введіть тему',
+        })
+        self.fields['content'].widget.attrs.update({
+            'class': 'topics-textarea',
+            'maxlength': '2500',
+            'placeholder': 'Напишіть обсяг...',
+        })
+
+class TopicSortForm(forms.Form):
+    SORT_BY_CHOICES = [
+        ('-id', 'по даті створення'),
+        ('title', 'по алфавіту'),
+        ('likes', 'по рейтингу'),
+    ]
+
+    sort_by = forms.ChoiceField(choices=SORT_BY_CHOICES, required=False, label='сортувати по:')
+
+
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment

@@ -18,6 +18,10 @@
     box-sizing: border-box;
 }
 
+.forums-block>a {
+    text-decoration: none;
+}
+
 /* Заголовок блоков */
 .forums-block-title {
     font-size: 20px;
@@ -102,6 +106,7 @@
     border: 0.5px solid white;
     border-radius: 10px;
     padding: 5px 10px; /* Уменьшение внутреннего отступа */
+    height: auto;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -135,11 +140,17 @@
     max-width: 100%; /* Устанавливаем ширину ограничения */
 }
 
+.topic-bottom-container {
+    display: flex;
+}
+
 /* Лайки */
 .forums-topic-item-likes {
     color: #FF3333;
     font-size: 14px; /* Увеличение текста */
     line-height: 1.2;
+    margin: 0;
+    flex: 1;
 }
 
 /* Дата создания */
@@ -148,6 +159,8 @@
     font-size: 14px; /* Увеличение текста */
     text-align: right;
     line-height: 1.2;
+    margin: 0;
+    flex: 1;
 }
 
 /* Общие стили для кнопки */

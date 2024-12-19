@@ -27,7 +27,7 @@ class GalleryItemCreateView(UserPassesTestMixin, CreateView):
     success_url = reverse_lazy('gallery')
 
     def test_func(self):
-        return self.request.user.is_superuser
+        return self.request.user.is_staff
 
     def handle_no_permission(self):
         return redirect('index')

@@ -15,9 +15,13 @@
 </div>
 
 <div class="category-container">
-    <a href="{% url 'create-topic' %}" class="create-topic-btn">
+    <a href="{% url 'create-topic' category.pk %}" class="create-topic-btn">
         <span class="plus">+</span> Створити нову тему
     </a>
+    <form method="get">
+        {{ form.sort_by }}
+        <button type="submit">сортувати</button>
+    </form>
     <p class="category-topics-title">Теми в цій категорії:</p>
     {% if topics %}
         <ul class="category-topics-list">

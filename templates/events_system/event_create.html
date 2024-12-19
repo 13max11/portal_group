@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Створення події{% endblock %}
+
+{% block content %}
+
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/event_list.css' %}">
+</head>
+
+<div class="gallery">
+    <h1 class="head">Створення події</h1>
+    <form action="{% url 'event-create' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">створити</button>
+    </form>
+</div>
+{% endblock %}

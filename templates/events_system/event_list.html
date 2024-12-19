@@ -3,20 +3,28 @@
 {% block title %}Список подій{% endblock %}
 
 {% block content %}
-<body>
-    <h1>Список івентів</h1>
-    <ul>
-        {% for event in events %}
-            <li>
-                <h2>{{ event.title }}</h2>
-                <p>{{ event.description }}</p>
-                {% if event.img %}
-                    <img src="{{ event.img.url }}" alt="{{ event.title }}" style="max-width: 300px;">
-                {% endif %}
-            </li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
 
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/events_list.css' %}">
+</head>
+
+<h1 class="head">Список подій сайту</h1>
+
+{% if request.user.is_staff %}
+    <a href="{% url 'event-create' %}"><button class="add-event-button">Додати подію</button></a>
+{% endif %}
+
+<div class="event-cards-field">
+    {% for event in events %}
+                <div class="event-cards">
+                    <div class="event-cart-background" style="background: url('{{ event.img.url }}') no-repeat center/cover;"></div>
+                    <a href="{% url 'event-details' event.pk %}"><img src="{{event.img.url}}" alt="event preview"></a>
+                    <h3>{{event.title}}</h3>
+                    <h4>{{event.date_start.date}} - {{event.date_end.date}}</h4>
+                </div>
+    {% empty %}
+
+    {% endfor %}
+</div>
 {% endblock %}

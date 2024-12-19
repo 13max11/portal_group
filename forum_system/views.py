@@ -10,7 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, ListView, DetailView
 from django.urls import reverse_lazy
 
-from .forms import TopicForm, CategoryForm, Category, PollForm, PollOptionForm
+from .forms import TopicForm, TopicCategoryForm, TopicSortForm, CategoryForm, Category, PollForm, PollOptionForm
 from django.http import JsonResponse
 from .models import Topic, Poll, PollOption, PollVote
 
@@ -148,6 +148,27 @@ class TopicCreateView(LoginRequiredMixin, CreateView):
         self.object = form.save()
         return redirect('topic-detail', pk=self.object.pk)  # Перенаправляем на страницу с деталями топика
 
+def topic_create_category(request, pk):
+    category = get_object_or_404(Category, pk=pk)
+
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    if request.method == 'POST':
+        form = TopicCategoryForm(request.POST)
+        if form.is_valid():
+            form.instance.created_by = request.user
+            form.instance.category = category
+            form.save()
+            return redirect('topic-detail', pk=form.instance.pk)
+    else:
+        form = TopicCategoryForm()
+
+    return render(request, 'forum_system/create_topic_category.html', {
+        'category': category, 
+        'form': form
+    })
+
 
 class TopicDetailView(DetailView):
     model = Topic
@@ -195,7 +216,19 @@ class CategoryDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['topics'] = self.object.topics.all()
+        context['form'] = TopicSortForm()
+
+        sort_by = self.request.GET.get('sort_by', '-id')
+
+        if sort_by == 'title':
+            context['topics'] = self.object.topics.all().order_by('title')
+        elif sort_by == '-id':
+            context['topics'] = self.object.topics.all().order_by('-id')
+        elif sort_by == 'likes':
+            context['topics'] = self.object.topics.all().annotate(likes_count=Count('likes')).order_by('-likes_count')
+        else:
+            context['topics'] = self.object.topics.all().order_by('-id')
+
         return context
 
 class CategoryListView(ListView):
@@ -222,6 +255,7 @@ def index(request):
 def forum(request):
     categories = Category.objects.all()
     topics = Topic.objects.all().order_by('-created_at')[:3]
+
     form = None
 
     if request.user.is_staff:
@@ -265,6 +299,7 @@ def update_topic(request, pk):
 
     if request.method == 'POST':
         form = TopicForm(request.POST, instance=topic)
+        form.instance.updated = True
         if form.is_valid():
             form.save()
             return redirect('topic-detail', pk=pk)

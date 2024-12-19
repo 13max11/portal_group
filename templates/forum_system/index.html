@@ -19,7 +19,7 @@
         {% for event in events %}
             <div class="event-cards">
                 <div class="event-cart-background" style="background: url('{{ event.img.url }}') no-repeat center/cover;"></div>
-                <img src="{{event.img.url}}" alt="event preview">
+                <a href="{% url 'event-details' event.pk %}"><img src="{{event.img.url}}" alt="event preview"></a>
                 <h3>{{event.title}}</h3>
                 <h4>{{event.date_start.date}} - {{event.date_end.date}}</h4>
             </div>
