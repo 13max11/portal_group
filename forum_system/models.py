@@ -27,6 +27,9 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Comment by {self.created_by} on {self.topic}"
+    
+    class Meta:
+        ordering = ['-id']
 
 class Like(models.Model):
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name="likes")

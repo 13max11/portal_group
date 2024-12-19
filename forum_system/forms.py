@@ -20,12 +20,12 @@ class TopicForm(forms.ModelForm):
         })
         self.fields['title'].widget.attrs.update({
             'class': 'topics-input',
-            'maxlength': '20',
+            'maxlength': '72',
             'placeholder': 'Введіть тему',
         })
         self.fields['content'].widget.attrs.update({
             'class': 'topics-textarea',
-            'maxlength': '1500',
+            'maxlength': '2500',
             'placeholder': 'Напишіть обсяг...',
         })
 

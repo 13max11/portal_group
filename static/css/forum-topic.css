@@ -12,6 +12,54 @@
     width: 45%;
 }
 
+.topic-head {
+    display: flex;
+    border-bottom-style: solid;
+    border-bottom-color: white;
+    border-width: 1px;
+}
+
+.topic-head>a {
+    text-decoration: none;
+}
+
+.back-to-category {
+    color:#ffffff;
+    margin-left: 0.3cm;
+    margin-right: 0.3cm;
+    
+    margin-top: auto;
+    margin-bottom: auto;
+    text-align: center;
+}
+
+.topic-head-right {
+    margin-left: 0.2cm;
+}
+
+.topic-head-top {
+    display: flex;
+}
+
+.topic-head-top>a>h3 {
+    color: #5D8CB3;
+    margin: 0;
+}
+
+.topic-head-top>a {
+    text-decoration: none;
+}
+
+.topic-head-bottom>a>p {
+    margin: 0;
+}
+
+.topic-head-bottom>a {
+    text-decoration: none;
+}
+
+
+
 .topics-user-field {
     position: absolute;
     top: 10px;
@@ -26,13 +74,13 @@
 
 .topics-avatar {
     object-fit: cover;
-    border-radius: 8px;
-    width: 30px;
-    height: 30px;
+    border-radius: 15px;
+    width: 1cm;
+    height: 1cm;
 }
 
 .topics-user-name {
-    color: #5D8CB3;
+    color: #5d8cb3;
     margin-left: 10px;
 }
 
@@ -43,6 +91,7 @@
     border-radius: 15px;
     padding: 20px;
     width: 100%;
+    min-height: 50vh;
     margin: 60px 20px 0;
     color: #5D8CB3;
     position: relative;
@@ -53,7 +102,7 @@
 }
 
 .topics-title {
-    color: white;
+    color: #6a9fca;
     font-size: 22px;
 }
 
@@ -76,7 +125,7 @@
     margin: 60px 20px 0 0px;
     color: #5D8CB3;
     position: relative;
-    max-height: 400px; /* Опционально: если вы хотите ограничить по высоте */
+    height: 400px; /* Опционально: если вы хотите ограничить по высоте */
     overflow-y: auto; /* Добавляем прокрутку, если комментариев много */
 }
 

@@ -14,12 +14,22 @@
 <!-- Основной блок информации о topic -->
 <div class="topic">
 <div class="left-container">
-    <div class="topics-main-container">
+    <div id="topics-main-container" class="topics-main-container">
         <div class="topics-content">
+            <div class="topic-head">
+                <a href="{% url 'category-detail' topic.category.id %}" class="back-to-category">←</a>
+                <a href="{% url 'profile' topic.created_by.username %}"><img src="{{ topic.created_by.avatar.url }}" alt="avatar" class="topics-avatar"></a>
+                <div class="topic-head-right">
+                    <div class="topic-head-top">
+                        <a href="{% url 'category-detail' topic.category.pk %}"><h3>{{ topic.category.name }}</h3></a>
+                    </div>
+                    <div class="topic-head-bottom">
+                        <a href="{% url 'profile' topic.created_by.username %}"><p>{{ topic.created_by.username }}</p></a>
+                    </div>
+                </div>
+            </div>
             <h1 class="topics-title">{{ topic.title }}</h1>
             <p class="topics-description">{{ topic.content|linebreaks }}</p>
-            <p class="topics-created">Створено: <span><a href="{% url 'profile' topic.created_by.username %}">{{ topic.created_by }}</a></span></p>
-            <p class="topics-likes">Сподобалося: <span>{{ likes_count }}</span></p>
         </div>
     </div>
 
@@ -29,9 +39,9 @@
             {% csrf_token %}
             <button type="submit" name="like" class="topics-like-btn">
                 {% if request.user in topic.likes.all %}
-                    👍 Не подобається
+                    👎 {{ likes_count }}
                 {% else %}
-                    ❤️ Подобається
+                    ❤️ {{ likes_count }}
                 {% endif %}
             </button>
         </form>
@@ -57,7 +67,7 @@
 </div>
 <!-- Дополнительный блок с комментариями справа -->
 <div class="right-container">
-    <div class="topics-side-comments">
+    <div id="topics-side-comments" class="topics-side-comments">
         <h2>Коментарі</h2>
         <ul>
             {% for comment in comments %}
@@ -70,14 +80,6 @@
     </div>
 </div>
 
-</div>
-
-<!-- Кнопки для редактирования и удаления -->
-
-
-<!-- Кнопка возврата назад -->
-<a href="{% url 'category-detail' topic.category.id %}" class="topics-back-btn">Повернутися до категорій</a>
-
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -87,6 +89,12 @@
         commentBtn.addEventListener('click', () => {
             commentSection.style.display = commentSection.style.display === 'block' ? 'none' : 'block';
         });
+    });
+
+    window.addEventListener('load', () => {
+        const div1 = document.getElementById('topics-main-container');
+        const div2 = document.getElementById('topics-side-comments');
+        div2.style.height = `${div1.offsetHeight + 40}px`;
     });
 </script>
 
