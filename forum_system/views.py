@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponseForbidden
 
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import CreateView, ListView, DetailView
 from django.urls import reverse_lazy
 
@@ -108,53 +108,30 @@ def create_topic(request, category_id):
             messages.error(request, "Title and content are required.")
     return render(request, 'forum_system/create_topic.html', {'category': category})'''
 
-'''def topic_detail(request, pk):
-    topic = get_object_or_404(Topic, id=pk)
-    if request.method == "POST":
-        if "comment" in request.POST:
-            content = request.POST.get("content")
-            if content:
-                Comment.objects.create(
-                    topic=topic,
-                    content=content,
-                    created_by=request.user
-                )
-            else:
-                messages.error(request, "Comment cannot be empty.")
-        elif "like" in request.POST:
-            if request.user.is_authenticated:
-                existing_like = Like.objects.filter(topic=topic, user=request.user).first()
-                if existing_like:
-                    existing_like.delete()  # Удалить лайк, если уже существует
-                else:
-                    Like.objects.create(topic=topic, user=request.user)
-            else:
-                return HttpResponseForbidden("You must be logged in to like a topic.")
 
-    comments = topic.comments.all()
-    likes_count = topic.likes.count()
-    return render(request, 'forum_system/topic_detail.html', {
-        'topic': topic,
-        'comments': comments,
-        'likes_count': likes_count
-    })'''
+@login_required
+def topic_create_view(request):
+    if request.method == 'POST':
+        form = TopicForm(request.POST)
+        if form.is_valid():
+            topic = form.save(commit=False)
+            if topic.category.only_mods and not request.user.is_staff:
+                messages.error(request, "Тільки модератори можуть створювати теми в цій категорії.")
+                return redirect('forum')
+            topic.created_by = request.user
+            topic.save()
+            return redirect('topic-detail', pk=topic.pk)
+    else:
+        form = TopicForm()
 
+    return render(request, 'forum_system/create_topic.html', {'form': form})
 
-class TopicCreateView(LoginRequiredMixin, CreateView):
-    template_name = 'forum_system/create_topic.html'
-    form_class = TopicForm
-    success_url = reverse_lazy('category')
-
-    def form_valid(self, form):
-        form.instance.created_by = self.request.user
-        self.object = form.save()
-        return redirect('topic-detail', pk=self.object.pk)  # Перенаправляем на страницу с деталями топика
-
+@login_required
 def topic_create_category(request, pk):
     category = get_object_or_404(Category, pk=pk)
-
-    if not request.user.is_authenticated:
-        return redirect('login')
+    
+    if category.only_mods and not request.user.is_staff:
+        return redirect('category-detail', category.pk)
 
     if request.method == 'POST':
         form = TopicCategoryForm(request.POST)
@@ -367,7 +344,7 @@ def delete_topic(request, pk):
     # Перевіряємо, чи користувач авторизований
     if not request.user.is_authenticated:
         messages.error(request, "You must be logged in to delete a topic.")
-        return redirect('forum_home') # Перенаправлення на головну сторінку форуму
+        return redirect('login') # Перенаправлення на головну сторінку форуму
     
     # Отримуємо топік за його ID
     topic = get_object_or_404(Topic, pk=pk)

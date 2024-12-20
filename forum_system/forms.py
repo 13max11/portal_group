@@ -4,7 +4,7 @@ from .models import Category, Topic, Comment, Poll, PollOption
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
-        fields = ['name', 'description']
+        fields = ['name', 'description', 'only_mods']
 
 class TopicForm(forms.ModelForm):
     category = forms.ModelChoiceField(queryset=Category.objects.all(), required=True)

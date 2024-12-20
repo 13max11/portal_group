@@ -79,7 +79,7 @@
         <ul>
             {% for comment in comments %}
                 <li>
-                    <strong><a href="{% url 'profile' comment.created_by.username %}" style="text-decoration: none; color: #5D8CB3;">{{ comment.created_by.username }}</a> {% if comment.created_by.pk == topic.created_by.pk %} [ТС] {% endif %} :</strong>
+                    <strong><a href="{% url 'profile' comment.created_by.username %}" style="text-decoration: none; color: #5D8CB3;">{{ comment.created_by.username }}</a>{% if comment.created_by.pk == topic.created_by.pk %} [ТС]{% endif %}:</strong>
                     {{ comment.content }}
                 </li>
             {% endfor %}

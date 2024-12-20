@@ -15,9 +15,11 @@
 </div>
 
 <div class="category-container">
+    {% if not category.only_mods or category.only_mods and request.user.is_staff %}
     <a href="{% url 'create-topic' category.pk %}" class="create-topic-btn">
         <span class="plus">+</span> Створити нову тему
     </a>
+    {% endif %}
     <form method="get" id="sortForm" style="width: fit-content; padding: 8px 12px;">
         {{ form.sort_by }}
     </form>
