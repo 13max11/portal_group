@@ -18,9 +18,8 @@
     <a href="{% url 'create-topic' category.pk %}" class="create-topic-btn">
         <span class="plus">+</span> Створити нову тему
     </a>
-    <form method="get">
+    <form method="get" id="sortForm" style="width: fit-content; padding: 8px 12px;">
         {{ form.sort_by }}
-        <button type="submit">сортувати</button>
     </form>
     <p class="category-topics-title">Теми в цій категорії:</p>
     {% if topics %}
@@ -61,6 +60,13 @@
             }
         });
     });
+
+
+
+    document.querySelector('[name="sort_by"]').addEventListener('change', function() {
+        document.getElementById('sortForm').submit();
+    });
+
 </script>
 
 {% endblock %}

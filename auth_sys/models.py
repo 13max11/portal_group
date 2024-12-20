@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from forum_system.models import Topic, Category
 
 # Create your models here.
 
@@ -16,6 +17,30 @@ class CustomUser(AbstractUser):
 
     def __str__(self) -> str:
         return self.username
+
+class TopicView(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
+    viewed_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-viewed_at']
+        unique_together = ('user', 'topic')
+
+    def __str__(self):
+        return f"{self.user.username} viewed {self.topic.title} at {self.viewed_at}"
+
+class CategoryView(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    viewed_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-viewed_at']
+        unique_together = ('user', 'category')
+
+    def __str__(self):
+        return f"{self.user.username} viewed {self.category.name} at {self.viewed_at}"
     
 
 class Project(models.Model):

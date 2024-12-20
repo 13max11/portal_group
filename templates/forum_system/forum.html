@@ -14,6 +14,9 @@
     <!-- Блок категорий -->
     <div class="forums-block">
         <h2 class="forums-block-title">Категорії</h2>
+        <form method="get" id="sortForm" style="margin-bottom: 6px;">
+            {{ sort_form.sort_by }}
+        </form>
         {% for category in categories %}
         <a href="{% url 'category-detail' category.id %}" class="forums-category-item">
             <div class="forums-category-item-title">{{ category.name }}</div>
@@ -70,6 +73,12 @@
     // Обработка клика, перенаправление по адресу
     createTopicBtn.addEventListener('click', () => {
         window.location.href = "{% url 'create-topic' %}";
+    });
+
+
+    
+    document.querySelector('[name="sort_by"]').addEventListener('change', function() {
+        document.getElementById('sortForm').submit();
     });
 </script>
 {% endblock %}

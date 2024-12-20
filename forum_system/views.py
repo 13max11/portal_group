@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Category, Topic, Comment, Like
 from events_system.models import Event
+from auth_sys.models import TopicView, CategoryView
+
 from django.contrib.auth.decorators import login_required
 #from django.contrib.auth.models import User
 from django.contrib import messages
@@ -10,13 +12,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, ListView, DetailView
 from django.urls import reverse_lazy
 
-from .forms import TopicForm, TopicCategoryForm, TopicSortForm, CategoryForm, Category, PollForm, PollOptionForm
+from .forms import TopicForm, TopicCategoryForm, TopicSortForm, CategoryForm, CategorySortForm, Category, PollForm, PollOptionForm
 from django.http import JsonResponse
 from .models import Topic, Poll, PollOption, PollVote
 
 from django.utils import timezone
 from datetime import timedelta
-from django.db.models import Count, Q
+from django.db.models import Count, Q, F
 
 
 @login_required
@@ -181,6 +183,20 @@ class TopicDetailView(DetailView):
         context['likes_count'] = self.object.likes.count()
         return context
     
+    def get_object(self, queryset=None):
+        # Отримуємо об'єкт теми
+        topic = super().get_object(queryset)
+
+        # Перевіряємо, чи користувач автентифікований
+        if self.request.user.is_authenticated:
+            # Зберігаємо перегляд теми
+            TopicView.objects.update_or_create(
+                user=self.request.user,
+                topic=topic,
+                defaults={'viewed_at': timezone.now()}
+            )
+        return topic
+    
     def post(self, request, *args, **kwargs):
         topic = self.get_object()
 
@@ -219,6 +235,7 @@ class CategoryDetailView(DetailView):
         context['form'] = TopicSortForm()
 
         sort_by = self.request.GET.get('sort_by', '-id')
+        context['form'] = TopicSortForm(initial={'sort_by': sort_by})
 
         if sort_by == 'title':
             context['topics'] = self.object.topics.all().order_by('title')
@@ -226,10 +243,27 @@ class CategoryDetailView(DetailView):
             context['topics'] = self.object.topics.all().order_by('-id')
         elif sort_by == 'likes':
             context['topics'] = self.object.topics.all().annotate(likes_count=Count('likes')).order_by('-likes_count')
+        elif sort_by == 'last':
+            context['topics'] = self.object.topics.filter(
+                topicview__user=self.request.user
+            ).annotate(
+                viewed_at=F('topicview__viewed_at')
+            ).order_by('-viewed_at')
         else:
             context['topics'] = self.object.topics.all().order_by('-id')
 
         return context
+
+    def get_object(self, queryset=None):
+        category = super().get_object(queryset)
+
+        if self.request.user.is_authenticated:
+            CategoryView.objects.update_or_create(
+                user=self.request.user,
+                category=category,
+                defaults={'viewed_at': timezone.now()}
+            )
+        return category
 
 class CategoryListView(ListView):
     model = Category
@@ -253,8 +287,28 @@ def index(request):
     return render(request, 'forum_system/index.html', context)
 
 def forum(request):
-    categories = Category.objects.all()
     topics = Topic.objects.all().order_by('-created_at')[:3]
+
+    sort_form = CategorySortForm()
+
+    sort_by = request.GET.get('sort_by', 'name')
+
+    sort_form = CategorySortForm(initial={'sort_by': sort_by})
+    
+    if sort_by == 'title':
+        categories = Category.objects.all().order_by('name')
+    elif sort_by == '-id':
+        categories = Category.objects.all().order_by('-id')
+    elif sort_by == 'topics':
+        categories = Category.objects.all().annotate(topics_count=Count('topics')).order_by('-topics_count')
+    elif sort_by == 'last':
+        categories = Category.objects.filter(
+            categoryview__user=request.user
+        ).annotate(
+            viewed_at=F('categoryview__viewed_at')
+        ).order_by('-viewed_at')
+    else:
+        categories = Category.objects.all().order_by('name')
 
     form = None
 
@@ -271,6 +325,7 @@ def forum(request):
         'categories': categories,
         'topics': topics,
         'form': form,
+        'sort_form': sort_form,
     }
 
     return render(request, 'forum_system/forum.html', context)
@@ -319,7 +374,7 @@ def delete_topic(request, pk):
     topic_category = topic.category.pk
 
     # Перевіряємо, чи користувач є автором теми
-    if topic.created_by != request.user:
+    if topic.created_by != request.user and not request.user.is_staff:
         messages.error(request, "You cannot delet this topic.")
         return redirect('topic-detail', topic.pk)
     

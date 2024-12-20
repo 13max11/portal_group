@@ -53,6 +53,17 @@ class TopicSortForm(forms.Form):
         ('-id', 'по даті створення'),
         ('title', 'по алфавіту'),
         ('likes', 'по рейтингу'),
+        ('last', 'останні переглянуті'),
+    ]
+
+    sort_by = forms.ChoiceField(choices=SORT_BY_CHOICES, required=False, label='сортувати по:')
+
+class CategorySortForm(forms.Form):
+    SORT_BY_CHOICES = [
+        ('name', 'по алфавіту'),
+        ('-id', 'по даті створення'),
+        ('topics', 'по кількості топіків'),
+        ('last', 'останні переглянуті'),
     ]
 
     sort_by = forms.ChoiceField(choices=SORT_BY_CHOICES, required=False, label='сортувати по:')

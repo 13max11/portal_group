@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}історія перегляду{% endblock %}
+
+{% block content %}
+
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/forum-category.css' %}">
+</head>
+
+<div class="category-container">
+    <p class="category-topics-title">Історія перегляду</p>
+    {% if topics_history %}
+        <ul class="category-topics-list">
+            {% for topic_history in topics_history %}
+                <li>
+                    <a href="{% url 'topic-detail' topic_history.topic.id %}" class="topic-card">
+                        <div class="topic-content">
+                            <h3 class="topic-title">{{ topic_history.topic.title }}</h3>
+                            <p class="topic-description">{{ topic_history.topic.content|truncatechars:50 }}</p>
+                        </div>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Ви ще не переглядали жодних топіків почніть перегляд <a href="{% url 'forum' %}">тут</a></p>
+    {% endif %}
+</div>
+{% endblock %}

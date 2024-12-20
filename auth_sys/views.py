@@ -2,7 +2,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import CreateView, ListView, TemplateView
-from .models import CustomUser, Project
+from .models import CustomUser, Project, TopicView
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import CustomUserCreationForm, PortfolioForm
 from django.contrib.auth import login, logout
@@ -85,3 +85,12 @@ def portfolio_add(request):
         form = PortfolioForm()
     return render(request, 'auth_sys/portfolio.html', {'form': form})
 
+
+def view_history(request):
+    topics = TopicView.objects.filter(user=request.user)
+
+    context = {
+        'topics_history': topics,
+    }
+
+    return render(request, 'auth_sys/view_history.html', context)
