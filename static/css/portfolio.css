@@ -210,3 +210,97 @@ textarea, input[type="text"], input[type="email"] {
     width: 100%;
     z-index: 2;
 }
+
+.add-portfolio-button {
+    margin-bottom: 20px;
+}
+
+.add-button {
+    background-color: #2C3E50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.add-button:hover {
+    background-color: #34495E;
+}
+
+.add-project-form {
+    background: #0E141B;
+    padding: 20px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #5D8CB3;
+}
+
+.form-group input[type="text"],
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #2C3E50;
+    border-radius: 4px;
+    background: #1E2A38;
+    color: #7FA1C1;
+}
+
+.form-group small {
+    display: block;
+    color: #5D8CB3;
+    margin-top: 5px;
+}
+
+.form-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.project-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.media-preview {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #2C3E50;
+    border-radius: 4px;
+    background: #1E2A38;
+}
+
+.media-preview img,
+.media-preview video {
+    max-width: 200px;
+    display: block;
+    margin: 0 auto;
+}
+
+.form-group .current-media {
+    margin-bottom: 10px;
+}
+
+.current-media label {
+    display: block;
+    margin-bottom: 5px;
+    color: #5D8CB3;
+}
