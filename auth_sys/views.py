@@ -15,6 +15,7 @@ from django.views.decorators.http import require_http_methods
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.hashers import make_password, check_password
 import json
+import os
 
 
 def auth_page(request):
@@ -235,7 +236,6 @@ def portfolio_delete(request, project_id):
 def portfolio_edit(request, project_id):
     project = get_object_or_404(Project, id=project_id)
     
-    # Перевіряємо права доступу
     if not can_edit_profile(request.user, project.user):
         return JsonResponse({
             'status': 'error',
@@ -243,16 +243,53 @@ def portfolio_edit(request, project_id):
         }, status=403)
     
     if request.method == 'POST':
+        # Зберігаємо старий медіафайл
+        old_media = project.media if project.media else None
+        old_media_path = old_media.path if old_media else None
+        
         form = PortfolioForm(request.POST, request.FILES, instance=project)
         if form.is_valid():
-            form.save()
-            return JsonResponse({'status': 'success'})
-        return JsonResponse({'status': 'error', 'errors': form.errors}, status=400)
+            try:
+                if 'media' in request.FILES:
+                    # Видаляємо старий файл з диску
+                    if old_media_path and os.path.exists(old_media_path):
+                        os.remove(old_media_path)
+                    
+                    # Генеруємо унікальне ім'я для нового файлу
+                    media_file = request.FILES['media']
+                    import uuid
+                    file_extension = media_file.name.split('.')[-1].lower()
+                    unique_filename = f"{uuid.uuid4()}.{file_extension}"
+                    media_file.name = unique_filename
+                
+                project = form.save()
+                
+                # Повертаємо оновлені дані проекту
+                return JsonResponse({
+                    'status': 'success',
+                    'media_url': project.media.url if project.media else None,
+                    'link': project.link,
+                    'link_title': project.link_title
+                })
+            except Exception as e:
+                if old_media:
+                    project.media = old_media
+                    project.save()
+                return JsonResponse({
+                    'status': 'error',
+                    'message': str(e)
+                }, status=500)
+        return JsonResponse({
+            'status': 'error',
+            'errors': form.errors
+        }, status=400)
     
     data = {
         'id': project.id,
         'title': project.title,
         'description': project.description,
+        'link': project.link,
+        'link_title': project.link_title,
         'media_url': project.media.url if project.media else None
     }
     return JsonResponse(data)
