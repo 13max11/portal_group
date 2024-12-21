@@ -11,12 +11,10 @@
 
 <div class="gallery">
     <h1 class="head">Галерея</h1>
-    {% if request.user.is_staff %}
-        <a href="{% url 'gallery-create' %}"><button class="add-foto-button">Додати фото</button></a>
-    {% endif %}
+    <a href="{% url 'gallery-create' %}"><button class="add-foto-button">Додати фото</button></a>
 
     {% if request.user.is_staff and not_verified %}
-        <a href="{% url 'gallery-verificate' %}"><button class="add-foto-button">Неперевірині фото</button></a>
+        <a href="{% url 'gallery-verification' %}"><button class="add-foto-button">Неперевірині фото</button></a>
     {% endif %}
 
     {% for gallery_item in gallery_items %}
