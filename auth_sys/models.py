@@ -79,6 +79,8 @@ class Project(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
     media = models.FileField(upload_to='media/images/portfolio/', null=True, blank=True)
+    link = models.URLField(max_length=200, null=True, blank=True)
+    link_title = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self) -> str:
         return self.title

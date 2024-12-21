@@ -18,18 +18,23 @@ class AvatarForm(forms.Form):
 class PortfolioForm(forms.ModelForm):
     class Meta:
         model = Project
-        fields = ['title', 'description', 'media']
+        fields = ['title', 'description', 'media', 'link', 'link_title']
         
     def clean_media(self):
         media = self.cleaned_data.get('media')
         if media:
-            # Перевіряємо розмір файлу (наприклад, максимум 5MB)
-            if media.size > 5 * 1024 * 1024:
-                raise forms.ValidationError('Файл занадто великий. Максимальний розмір - 5MB')
+            # Отримуємо розширення файлу
+            file_extension = media.name.split('.')[-1].lower()
             
-            # Перевіряємо тип файлу
-            allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'video/mp4']
-            if media.content_type not in allowed_types:
-                raise forms.ValidationError('Непідтримуваний тип файлу')
+            # Дозволені розширення
+            allowed_image_types = ['jpg', 'jpeg', 'png', 'gif']
+            allowed_video_types = ['mp4', 'webm', 'mov']
+            
+            if file_extension not in allowed_image_types + allowed_video_types:
+                raise forms.ValidationError('Непідтримуваний тип файлу. Дозволені формати: jpg, jpeg, png, gif, mp4, webm, mov')
+            
+            # Збільшуємо максимальний розмір до 50MB для відео
+            if media.size > 50 * 1024 * 1024:  # 50MB
+                raise forms.ValidationError('Файл занадто великий. Максимальний розмір - 50MB')
                 
         return media
