@@ -138,9 +138,12 @@ def profile_view(request, username):
 @login_required
 def profile_update(request):
     if request.method == 'POST':
-        user = request.user
-        target_user = get_object_or_404(get_user_model(), username=request.POST.get('username', user.username))
+        # Отримуємо username з форми
+        profile_username = request.POST.get('username')
+        User = get_user_model()
+        target_user = get_object_or_404(User, username=profile_username)
         
+        # Перевіряємо права доступу
         if not can_edit_profile(request.user, target_user):
             raise PermissionDenied("У вас немає прав для редагування цього профілю")
             
@@ -166,7 +169,9 @@ def profile_update(request):
         except Exception as e:
             messages.error(request, f'Помилка при оновленні профілю: {str(e)}')
             
-    return redirect('profile', username=target_user.username)
+        return redirect('profile', username=target_user.username)
+    
+    return redirect('profile', username=request.user.username)
 
 
 @login_required
