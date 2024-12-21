@@ -47,23 +47,29 @@ def profile_view(request, username):
 def profile_update(request):
     if request.method == 'POST':
         user = request.user
-        
-        if 'first_name' in request.POST:
-            user.first_name = request.POST['first_name']
-        if 'last_name' in request.POST:
-            user.last_name = request.POST['last_name']
-        if 'email' in request.POST:
-            user.email = request.POST['email']
-        if 'phone_number' in request.POST:
-            user.phone_number = request.POST['phone_number']
-        if 'description' in request.POST:
-            user.description = request.POST['description']
-        if 'avatar' in request.FILES:
-            user.avatar = request.FILES['avatar']
+        try:
+            if 'avatar' in request.FILES:
+                # Видаляємо стару аватарку, якщо вона існує
+                if user.avatar:
+                    user.avatar.delete(save=False)
+                user.avatar = request.FILES['avatar']
+            
+            if 'first_name' in request.POST:
+                user.first_name = request.POST['first_name']
+            if 'last_name' in request.POST:
+                user.last_name = request.POST['last_name']
+            if 'email' in request.POST:
+                user.email = request.POST['email']
+            if 'phone_number' in request.POST:
+                user.phone_number = request.POST['phone_number']
+            if 'description' in request.POST:
+                user.description = request.POST['description']
 
-        user.save()
-        messages.success(request, 'Профіль успішно оновлено!')
-        
+            user.save()
+            messages.success(request, 'Профіль успішно оновлено!')
+        except Exception as e:
+            messages.error(request, f'Помилка при оновленні профілю: {str(e)}')
+            
     return redirect('profile', username=request.user.username)
 
 
