@@ -50,6 +50,7 @@
                     <div id="name-edit" style="display: none;">
                         <form method="post" action="{% url 'profile-update' %}">
                             {% csrf_token %}
+                            <input type="hidden" name="username" value="{{ profile_user.username }}">
                             <input type="text" name="first_name" value="{{ profile_user.first_name }}" placeholder="Ім'я">
                             <input type="text" name="last_name" value="{{ profile_user.last_name }}" placeholder="Прізвище">
                             <button type="submit" class="edit-button">Зберегти</button>
@@ -70,6 +71,7 @@
                     <div id="email-edit" style="display: none;">
                         <form method="post" action="{% url 'profile-update' %}">
                             {% csrf_token %}
+                            <input type="hidden" name="username" value="{{ profile_user.username }}">
                             <input type="email" name="email" value="{{ profile_user.email }}" placeholder="Email">
                             <button type="submit" class="edit-button">Зберегти</button>
                             <button type="button" onclick="toggleEdit('email')" class="edit-button">Скасувати</button>
@@ -89,6 +91,7 @@
                     <div id="phone-edit" style="display: none;">
                         <form method="post" action="{% url 'profile-update' %}">
                             {% csrf_token %}
+                            <input type="hidden" name="username" value="{{ profile_user.username }}">
                             <input type="text" name="phone_number" value="{{ profile_user.phone_number }}" placeholder="Телефон">
                             <button type="submit" class="edit-button">Зберегти</button>
                             <button type="button" onclick="toggleEdit('phone')" class="edit-button">Скасувати</button>
@@ -115,6 +118,7 @@
                     <div id="description-edit" style="display: none;">
                         <form method="post" action="{% url 'profile-update' %}">
                             {% csrf_token %}
+                            <input type="hidden" name="username" value="{{ profile_user.username }}">
                             <textarea name="description" placeholder="Опис">{{ profile_user.description }}</textarea>
                             <button type="submit" class="edit-button">Зберегти</button>
                             <button type="button" onclick="toggleEdit('description')" class="edit-button">Скасувати</button>
