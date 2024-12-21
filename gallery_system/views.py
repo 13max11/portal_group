@@ -17,14 +17,15 @@ def gallery(request):
 
     return render(request, 'gallery_system/gallery.html', context)
 
-class GalleryItemDeleteView(DeleteView):
-    model = GalleryItem
-    template_name = 'gallery_system/gallery.html'
-    success_url = reverse_lazy('gallery')
+def gallery_item_delete(request, pk):
+    if request.user.is_staff:
+        gallery_item = get_object_or_404(GalleryItem, pk=pk)
 
-    def get(self, request, *args, **kwargs):
-        # Автоматичне видалення при GET запиті
-        return self.post(request, *args, **kwargs)
+        gallery_item.delete()
+
+        return redirect('gallery')
+    else:
+        return redirect('gallery')
 
 class GalleryItemCreateView(CreateView):
     model = GalleryItem

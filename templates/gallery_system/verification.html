@@ -13,6 +13,8 @@
     <h1 class="head">Перевірка фото</h1>
 
     {% for gallery_item in gallery_items %}
+    <a href="{% url 'gallery-verificate' gallery_item.pk %}"><button class="add-foto-button" style="margin-bottom: 10px;">Додати фото {{gallery_item.title}}</button></a>
+    <a href="{% url 'gallery-delete' gallery_item.pk %}"><button class="add-foto-button" style="margin-bottom: 10px;">Забракувати фото {{gallery_item.title}}</button></a>
         {% if gallery_item.url %}
             <a href="{{gallery_item.url}}" target="_blank"><div class="gallery-item" id="{{gallery_item.id}}">
                 <img src="{{gallery_item.img.url}}" alt="gallery-item">

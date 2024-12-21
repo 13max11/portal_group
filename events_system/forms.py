@@ -2,11 +2,11 @@ from django import forms
 from .models import Event
 
 class EventForm(forms.ModelForm):
-    date_start = forms.DateField(
+    date_start = forms.DateTimeField (
         widget=forms.DateInput(attrs={'type': 'datetime-local'}),
         label="Дата початку"
     )
-    date_end = forms.DateField(
+    date_end = forms.DateTimeField (
         widget=forms.DateInput(attrs={'type': 'datetime-local'}),
         label="Дата закінчення"
     )

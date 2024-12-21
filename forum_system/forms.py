@@ -7,11 +7,15 @@ class CategoryForm(forms.ModelForm):
         fields = ['name', 'description', 'only_mods']
 
 class TopicForm(forms.ModelForm):
-    category = forms.ModelChoiceField(queryset=Category.objects.all(), required=True)
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(), 
+        required=True
+    )
+    img = forms.ImageField(label="Завантажте сюди своє фото по бажанню", required=False)
 
     class Meta:
         model = Topic
-        fields = ['category', 'title', 'content']
+        fields = ['category', 'title', 'content', 'img']
 
     def __init__(self, *args, **kwargs):
         super(TopicForm, self).__init__(*args, **kwargs)
@@ -30,10 +34,11 @@ class TopicForm(forms.ModelForm):
         })
 
 class TopicCategoryForm(forms.ModelForm):
+    img = forms.ImageField(label="Завантажте сюди своє фото по бажанню", required=False)
 
     class Meta:
         model = Topic
-        fields = ['title', 'content']
+        fields = ['title', 'content', 'img']
 
     def __init__(self, *args, **kwargs):
         super(TopicCategoryForm, self).__init__(*args, **kwargs)

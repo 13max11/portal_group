@@ -12,8 +12,9 @@ class Category(models.Model):
 
 class Topic(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="topics")
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=72)
     content = models.TextField()
+    img = models.ImageField(upload_to='images/forum/', blank=True, null=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 

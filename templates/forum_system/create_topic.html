@@ -16,7 +16,7 @@
 
 <!-- Основной блок с формой -->
 <div class="topics-main-container">
-    <form method="post">
+    <form action="{% url 'create-topic' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="topics-form-group">
             <!-- Select-категория -->
@@ -32,6 +32,10 @@
             <!-- Поле ввода content -->
             <label for="{{ form.content.id_for_label }}">Обсяг</label>
             {{ form.content }}
+        </div>
+        <div class="topics-form-group">
+            <label for="{{ form.img.id_for_label }}">Фото (за бажанням)</label>
+            {{ form.img }}
         </div>
         <!-- Кнопка submit -->
         <button type="submit" class="topics-submit-btn">Створити тему</button>
