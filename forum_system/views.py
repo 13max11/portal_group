@@ -112,7 +112,7 @@ def create_topic(request, category_id):
 @login_required
 def topic_create_view(request):
     if request.method == 'POST':
-        form = TopicForm(request.POST)
+        form = TopicForm(request.POST, request.FILES)
         if form.is_valid():
             topic = form.save(commit=False)
             if topic.category.only_mods and not request.user.is_staff:
@@ -134,7 +134,7 @@ def topic_create_category(request, pk):
         return redirect('category-detail', category.pk)
 
     if request.method == 'POST':
-        form = TopicCategoryForm(request.POST)
+        form = TopicCategoryForm(request.POST, request.FILES)
         if form.is_valid():
             form.instance.created_by = request.user
             form.instance.category = category
