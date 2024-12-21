@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import Lesson
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from .forms import LessonFilterForm, HomeworkFilterForm
 from django.urls import reverse_lazy
 # Create your views here.
@@ -22,9 +22,9 @@ class LessonsListView(ListView):
         context["form"] = LessonFilterForm(self.request.GET)
         return context
     
-class HomeworkListView(ListView):
+class HomeworkDetailView(DetailView):
     model = Lesson
-    context_object_name = 'lessons'
+    context_object_name = 'lesson'
     template_name = 'daily_sys/homework_detail.html'
 
     def get_queryset(self):
