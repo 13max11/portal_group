@@ -7,5 +7,7 @@ class GalleryItem(models.Model):
     img = models.ImageField(upload_to='images/gallery/')
     url = models.URLField(max_length=255, blank=True)
 
+    verified = models.BooleanField(default=False)
+
     class Meta:
         ordering = ['-id']
