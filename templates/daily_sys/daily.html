@@ -3,29 +3,32 @@
 {% block title %}Електронний щоденник{% endblock %}
 
 {% block content %}
-<body>
-    <h1>Your daily</h1>
-    <hr>
-    <ul>
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/daily.css' %}">
+</head>
+<div class="daily-container">
+    <!-- Заголовок категорії -->
+    <div class="daily-header">
+        <h1 class="daily-title">Електронний щоденник</h1>
+        <p class="daily-description">Ваші уроки та завдання</p>
+    </div>
+
+    <!-- Список уроків -->
+    <h2 class="daily-topics-title">Ваші уроки:</h2>
+    <ul class="daily-topics-list">
         {% for lesson in lessons %}
         <li>
-            <p>{{lesson.date}}</p>
-            <p>Тема уроку: {{lesson.theme}}</p>
-            <p>{{status.presence}}</p>
-            
+            <!-- Клікабельна картка уроку -->
+            <a href="{% url 'homework-detail' lesson.pk %}" class="lesson-card">
+                <div class="lesson-content">
+                    <!-- Назва уроку -->
+                    <p class="lesson-title">{{ lesson.date }} - {{ lesson.theme }}</p>
+                    <p class="lesson-grade">Оцінка: {{ lesson.grade }}</p>
+                </div>
+            </a>
         </li>
-        <form method="post">
-            {{ form.status.label_tag }}
-            {{ form.status}}
-        </form>
-        <p><a href="{% url 'homework-detail' lesson.pk %}"> Homework: </a>
-            {{lesson.grade}}</p>
         {% endfor %}
-        
-
     </ul>
-
-
-</body>
-</html>
+</div>
 {% endblock %}

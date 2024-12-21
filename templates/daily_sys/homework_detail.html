@@ -1,20 +1,29 @@
 {% extends 'base.html' %}
 
-{% block title %}Домашні завдання{% endblock %}
+{% block title %}Домашнє завдання{% endblock %}
 
 {% block content %}
-    {% for lesson in lessons %}
-        <h2>Домашка №{{lesson.pk}} на {{lesson.date}}</h2>
-        <hr>
-        {{lesson.homework}}
-        {{lesson.file}}
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-        </form>
-        <form  action="/daily/">
-            <button type="submit">Назад</button>
-        </form>
-        
-    {% endfor %}
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/homework.css' %}">
+</head>
+    <div class="homework">
+        <div class="homework-header">
+            <h2>Домашка №{{ lesson.pk }}</h2>
+        </div>
+        <div class="homework-content">
+            <h3 class="homework-title">{{ lesson.title }}</h3>
+            <p class="homework-description">{{ lesson.homework }}</p>
+            <p class="homework-file">{{ lesson.file }}</p>
+            <p class="homework-created">Дата створення: {{ lesson.date }}</p>
+        </div>
+        <div class="homework-footer">
+            <form method="post" action="{% url 'homework-detail' lesson.pk %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Зберегти</button>
+            </form>
+            <a href="/daily/" class="homework-back-btn">Назад</a>
+        </div>
+    </div>
 {% endblock %}
