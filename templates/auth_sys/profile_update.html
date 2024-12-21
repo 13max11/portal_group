@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/portfolio.css' %}">
+</head>
+
 <h2>Профіль: {{ user.username }}</h2>
 
 <!-- Change Password Form -->

@@ -1,6 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from forum_system.models import Topic, Category
+from PIL import Image
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from io import BytesIO
+import sys
 
 # Create your models here.
 
@@ -17,6 +21,49 @@ class CustomUser(AbstractUser):
 
     def __str__(self) -> str:
         return self.username
+
+    def save(self, *args, **kwargs):
+        # Якщо є нова аватарка
+        if self.avatar:
+            # Відкриваємо зображення
+            img = Image.open(self.avatar)
+            
+            # Конвертуємо в RGB якщо потрібно
+            if img.mode != 'RGB':
+                img = img.convert('RGB')
+            
+            # Визначаємо розмір для обрізки (квадрат)
+            width, height = img.size
+            size = min(width, height)
+            
+            # Вираховуємо координати для центрального обрізання
+            left = (width - size) // 2
+            top = (height - size) // 2
+            right = left + size
+            bottom = top + size
+            
+            # Обрізаємо зображення
+            img = img.crop((left, top, right, bottom))
+            
+            # Змінюємо розмір до 512x512
+            img = img.resize((512, 512), Image.Resampling.LANCZOS)
+            
+            # Зберігаємо в буфер
+            output = BytesIO()
+            img.save(output, format='JPEG', quality=90)
+            output.seek(0)
+            
+            # Замінюємо оригінальний файл на оброблений
+            self.avatar = InMemoryUploadedFile(
+                output,
+                'ImageField',
+                f"{self.avatar.name.split('.')[0]}.jpg",
+                'image/jpeg',
+                sys.getsizeof(output),
+                None
+            )
+            
+        super().save(*args, **kwargs)
 
 class TopicView(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)

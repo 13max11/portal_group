@@ -3,116 +3,142 @@
 {% block title %}Профіль {{ profile_user.username }}{% endblock %}
 
 {% block content %}
-    <h2>Профіль: {{ profile_user.username }}</h2>
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/portfolio.css' %}">
+</head>
 
-    <!-- Ім'я та прізвище -->
-    <div class="profile-field">
-        <span id="name-display">
-            <h3>{{ profile_user.first_name }} {{ profile_user.last_name }}</h3>
-            {% if request.user == profile_user or request.user.is_admin %}
-                <button onclick="toggleEdit('name')" class="edit-button">Змінити</button>
-            {% endif %}
-        </span>
-        
-        <div id="name-edit" style="display: none;">
-            <form method="post" action="{% url 'profile-update' %}">
-                {% csrf_token %}
-                <input type="text" name="first_name" value="{{ profile_user.first_name }}" placeholder="Ім'я">
-                <input type="text" name="last_name" value="{{ profile_user.last_name }}" placeholder="Прізвище">
-                <button type="submit">Зберегти</button>
-                <button type="button" onclick="toggleEdit('name')">Скасувати</button>
-            </form>
+<div class="profile-container">
+    <div class="profile-header">
+        <!-- Ліва колонка з аватаркою -->
+        <div class="profile-avatar-section">
+            <div class="profile-field">
+                <span id="avatar-display">
+                    {% if request.user == profile_user or request.user.is_admin %}
+                        <img src="{{ profile_user.avatar.url }}" alt="Avatar" class="profile-avatar" onclick="toggleEdit('avatar')" style="cursor: pointer;">
+                    {% else %}
+                        <img src="{{ profile_user.avatar.url }}" alt="Avatar" class="profile-avatar">
+                    {% endif %}
+                </span>
+                
+                <div id="avatar-edit" style="display: none;">
+                    <form method="post" action="{% url 'profile-update' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="file" name="avatar">
+                        <small>Рекомендований розмір: 512x512 пікселів</small>
+                        <button type="submit" class="edit-button">Зберегти</button>
+                        <button type="button" onclick="toggleEdit('avatar')" class="edit-button">Скасувати</button>
+                    </form>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <!-- Аватар -->
-    <div class="profile-field">
-        <span id="avatar-display">
-            <img src="{{ profile_user.avatar.url }}" alt="Avatar" width="50">
-            {% if request.user == profile_user or request.user.is_admin %}
-                <button onclick="toggleEdit('avatar')" class="edit-button">Змінити</button>
-            {% endif %}
-        </span>
-        
-        <div id="avatar-edit" style="display: none;">
-            <form method="post" action="{% url 'profile-update' %}" enctype="multipart/form-data">
-                {% csrf_token %}
-                <input type="file" name="avatar">
-                <button type="submit">Зберегти</button>
-                <button type="button" onclick="toggleEdit('avatar')">Скасувати</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Пошта -->
-    <div class="profile-field">
-        <span id="email-display">
-            <h3>Пошта: {{ profile_user.email }}</h3>
-            {% if request.user == profile_user or request.user.is_admin %}
-                <button onclick="toggleEdit('email')" class="edit-button">Змінити</button>
-            {% endif %}
-        </span>
-        
-        <div id="email-edit" style="display: none;">
-            <form method="post" action="{% url 'profile-update' %}">
-                {% csrf_token %}
-                <input type="email" name="email" value="{{ profile_user.email }}" placeholder="Email">
-                <button type="submit">Зберегти</button>
-                <button type="button" onclick="toggleEdit('email')">Скасувати</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Телефон -->
-    <div class="profile-field">
-        <span id="phone-display">
-            <h3>Телефон: {{ profile_user.phone_number }}</h3>
-            {% if request.user == profile_user or request.user.is_admin %}
-                <button onclick="toggleEdit('phone')" class="edit-button">Змінити</button>
-            {% endif %}
-        </span>
-        
-        <div id="phone-edit" style="display: none;">
-            <form method="post" action="{% url 'profile-update' %}">
-                {% csrf_token %}
-                <input type="text" name="phone_number" value="{{ profile_user.phone_number }}" placeholder="Телефон">
-                <button type="submit">Зберегти</button>
-                <button type="button" onclick="toggleEdit('phone')">Скасувати</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Опис -->
-    <div class="profile-field">
-        <span id="description-display">
-            <p>{{ profile_user.description }}</p>
-            {% if request.user == profile_user or request.user.is_admin %}
-                <button onclick="toggleEdit('description')" class="edit-button">Змінити</button>
-            {% endif %}
-        </span>
-        
-        <div id="description-edit" style="display: none;">
-            <form method="post" action="{% url 'profile-update' %}">
-                {% csrf_token %}
-                <textarea name="description" placeholder="Опис">{{ profile_user.description }}</textarea>
-                <button type="submit">Зберегти</button>
-                <button type="button" onclick="toggleEdit('description')">Скасувати</button>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        function toggleEdit(fieldName) {
-            const displayElement = document.getElementById(fieldName + '-display');
-            const editElement = document.getElementById(fieldName + '-edit');
+        <!-- Права колонка з інформацією -->
+        <div class="profile-info-section">
+            <h2 class="profile-title">Профіль: <span class="profile-username">{{ profile_user.username }}</span></h2>
             
-            if (displayElement.style.display === 'none') {
-                displayElement.style.display = 'block';
-                editElement.style.display = 'none';
-            } else {
-                displayElement.style.display = 'none';
-                editElement.style.display = 'block';
-            }
+            <div class="profile-info-left">
+                <!-- Ім'я та прізвище -->
+                <div class="profile-field">
+                    <span id="name-display">
+                        <h3>{{ profile_user.first_name }} {{ profile_user.last_name }}</h3>
+                        {% if request.user == profile_user or request.user.is_admin %}
+                            <button onclick="toggleEdit('name')" class="edit-button">Змінити</button>
+                        {% endif %}
+                    </span>
+                    
+                    <div id="name-edit" style="display: none;">
+                        <form method="post" action="{% url 'profile-update' %}">
+                            {% csrf_token %}
+                            <input type="text" name="first_name" value="{{ profile_user.first_name }}" placeholder="Ім'я">
+                            <input type="text" name="last_name" value="{{ profile_user.last_name }}" placeholder="Прізвище">
+                            <button type="submit" class="edit-button">Зберегти</button>
+                            <button type="button" onclick="toggleEdit('name')" class="edit-button">Скасувати</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Пошта -->
+                <div class="profile-field">
+                    <span id="email-display">
+                        <h3>Пошта: <span class="profile-email">{{ profile_user.email }}</span></h3>
+                        {% if request.user == profile_user or request.user.is_admin %}
+                            <button onclick="toggleEdit('email')" class="edit-button">Змінити</button>
+                        {% endif %}
+                    </span>
+                    
+                    <div id="email-edit" style="display: none;">
+                        <form method="post" action="{% url 'profile-update' %}">
+                            {% csrf_token %}
+                            <input type="email" name="email" value="{{ profile_user.email }}" placeholder="Email">
+                            <button type="submit" class="edit-button">Зберегти</button>
+                            <button type="button" onclick="toggleEdit('email')" class="edit-button">Скасувати</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Телефон -->
+                <div class="profile-field">
+                    <span id="phone-display">
+                        <h3>Телефон: <span class="profile-phone">{{ profile_user.phone_number }}</span></h3>
+                        {% if request.user == profile_user or request.user.is_admin %}
+                            <button onclick="toggleEdit('phone')" class="edit-button">Змінити</button>
+                        {% endif %}
+                    </span>
+                    
+                    <div id="phone-edit" style="display: none;">
+                        <form method="post" action="{% url 'profile-update' %}">
+                            {% csrf_token %}
+                            <input type="text" name="phone_number" value="{{ profile_user.phone_number }}" placeholder="Телефон">
+                            <button type="submit" class="edit-button">Зберегти</button>
+                            <button type="button" onclick="toggleEdit('phone')" class="edit-button">Скасувати</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Опис тепер буде справа -->
+            <div class="profile-description">
+                <div class="profile-field">
+                    <span id="description-display">
+                        <div class="description-header">
+                            <h3>Опис:</h3>
+                        </div>
+                        <div class="description-content">
+                            <p>{{ profile_user.description }}</p>
+                            {% if request.user == profile_user or request.user.is_admin %}
+                                <button onclick="toggleEdit('description')" class="edit-button">Змінити</button>
+                            {% endif %}
+                        </div>
+                    </span>
+                    
+                    <div id="description-edit" style="display: none;">
+                        <form method="post" action="{% url 'profile-update' %}">
+                            {% csrf_token %}
+                            <textarea name="description" placeholder="Опис">{{ profile_user.description }}</textarea>
+                            <button type="submit" class="edit-button">Зберегти</button>
+                            <button type="button" onclick="toggleEdit('description')" class="edit-button">Скасувати</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function toggleEdit(fieldName) {
+        const displayElement = document.getElementById(fieldName + '-display');
+        const editElement = document.getElementById(fieldName + '-edit');
+        
+        if (displayElement.style.display === 'none') {
+            displayElement.style.display = 'block';
+            editElement.style.display = 'none';
+        } else {
+            displayElement.style.display = 'none';
+            editElement.style.display = 'block';
         }
-    </script>
+    }
+</script>
 {% endblock %}
