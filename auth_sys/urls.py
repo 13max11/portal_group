@@ -14,4 +14,8 @@ urlpatterns = [
     path('portfolio/add/', views.portfolio_add, name='portfolio-add'),
     path('portfolio/delete/<int:project_id>/', views.portfolio_delete, name='portfolio-delete'),
     path('portfolio/edit/<int:project_id>/', views.portfolio_edit, name='portfolio-edit'),
+    path('add-quick-account/', views.add_quick_account, name='add-quick-account'),
+    path('remove-quick-account/<str:username>/', views.remove_quick_account, name='remove-quick-account'),
+    path('add-saved-account/', views.add_saved_account, name='add-saved-account'),
+    path('switch-account/<str:username>/', views.switch_account, name='switch-account'),
 ]

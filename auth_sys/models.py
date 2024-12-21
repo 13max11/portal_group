@@ -32,22 +32,6 @@ class CustomUser(AbstractUser):
             if img.mode != 'RGB':
                 img = img.convert('RGB')
             
-            # Визначаємо розмір для обрізки (квадрат)
-            width, height = img.size
-            size = min(width, height)
-            
-            # Вираховуємо координати для центрального обрізання
-            left = (width - size) // 2
-            top = (height - size) // 2
-            right = left + size
-            bottom = top + size
-            
-            # Обрізаємо зображення
-            img = img.crop((left, top, right, bottom))
-            
-            # Змінюємо розмір до 512x512
-            img = img.resize((512, 512), Image.Resampling.LANCZOS)
-            
             # Зберігаємо в буфер
             output = BytesIO()
             img.save(output, format='JPEG', quality=90)
@@ -98,5 +82,22 @@ class Project(models.Model):
 
     def __str__(self) -> str:
         return self.title
+
+class QuickAccount(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='quick_accounts')
+    quick_access_to = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='quick_accessed_by')
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'quick_access_to')
+
+class SavedAccount(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='saved_accounts')
+    username = models.CharField(max_length=150)
+    password = models.CharField(max_length=128)  # Зберігаємо незашифрований пароль
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'username')
 
 
