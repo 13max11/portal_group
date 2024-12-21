@@ -18,7 +18,7 @@
             <p class="homework-created">Дата створення: {{ lesson.date }}</p>
         </div>
         <div class="homework-footer">
-            <form method="post">
+            <form method="post" action="{% url 'homework-detail' lesson.pk %}">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <button type="submit">Зберегти</button>

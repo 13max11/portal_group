@@ -15,10 +15,6 @@
         <a href="{% url 'gallery-create' %}"><button class="add-foto-button">Додати фото</button></a>
     {% endif %}
 
-    {% if request.user.is_staff and not_verified %}
-        <a href="{% url 'gallery-verificate' %}"><button class="add-foto-button">Неперевірині фото</button></a>
-    {% endif %}
-
     {% for gallery_item in gallery_items %}
         {% if gallery_item.url %}
             <a href="{{gallery_item.url}}" target="_blank"><div class="gallery-item" id="{{gallery_item.id}}">
@@ -34,7 +30,7 @@
             </div>
         {% endif %}
     {% empty %}
-            <h1 class="head" style="color: #5D8CB3;">Наразі в галереї немає фото</h1>
+            <h1 class="head" style="color: #5D8CB3;">Нічого верифікувати</h1>
     {% endfor %}
 </div>
 

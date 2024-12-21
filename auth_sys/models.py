@@ -67,7 +67,7 @@ class CustomUser(AbstractUser):
 
 class TopicView(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
+    topic = models.ForeignKey('forum_system.Topic', on_delete=models.CASCADE)
     viewed_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -79,7 +79,7 @@ class TopicView(models.Model):
 
 class CategoryView(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey('forum_system.Category', on_delete=models.CASCADE)
     viewed_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
