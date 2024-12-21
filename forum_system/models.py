@@ -14,9 +14,8 @@ class Topic(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="topics")
     title = models.CharField(max_length=200)
     content = models.TextField()
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  # Используем AUTH_USER_MODEL
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title

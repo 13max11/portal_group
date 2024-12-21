@@ -3,116 +3,441 @@
 {% block title %}Профіль {{ profile_user.username }}{% endblock %}
 
 {% block content %}
-    <h2>Профіль: {{ profile_user.username }}</h2>
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/portfolio.css' %}">
+</head>
 
-    <!-- Ім'я та прізвище -->
-    <div class="profile-field">
-        <span id="name-display">
-            <h3>{{ profile_user.first_name }} {{ profile_user.last_name }}</h3>
-            {% if request.user == profile_user or request.user.is_admin %}
-                <button onclick="toggleEdit('name')" class="edit-button">Змінити</button>
-            {% endif %}
-        </span>
-        
-        <div id="name-edit" style="display: none;">
-            <form method="post" action="{% url 'profile-update' %}">
-                {% csrf_token %}
-                <input type="text" name="first_name" value="{{ profile_user.first_name }}" placeholder="Ім'я">
-                <input type="text" name="last_name" value="{{ profile_user.last_name }}" placeholder="Прізвище">
-                <button type="submit">Зберегти</button>
-                <button type="button" onclick="toggleEdit('name')">Скасувати</button>
-            </form>
+<div class="profile-container">
+    <div class="profile-header">
+        <!-- Ліва колонка з аватаркою -->
+        <div class="profile-avatar-section">
+            <div class="profile-field">
+                <span id="avatar-display">
+                    {% if request.user == profile_user or request.user.is_admin %}
+                        <img src="{{ profile_user.avatar.url }}" alt="Avatar" class="profile-avatar" onclick="toggleEdit('avatar')" style="cursor: pointer;">
+                    {% else %}
+                        <img src="{{ profile_user.avatar.url }}" alt="Avatar" class="profile-avatar">
+                    {% endif %}
+                </span>
+                
+                <div id="avatar-edit" style="display: none;">
+                    <form method="post" action="{% url 'profile-update' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="file" name="avatar">
+                        <small>Рекомендований розмір: 512x512 пікселів</small>
+                        <button type="submit" class="edit-button">Зберегти</button>
+                        <button type="button" onclick="toggleEdit('avatar')" class="edit-button">Скасувати</button>
+                    </form>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <!-- Аватар -->
-    <div class="profile-field">
-        <span id="avatar-display">
-            <img src="{{ profile_user.avatar.url }}" alt="Avatar" width="50">
-            {% if request.user == profile_user or request.user.is_admin %}
-                <button onclick="toggleEdit('avatar')" class="edit-button">Змінити</button>
-            {% endif %}
-        </span>
-        
-        <div id="avatar-edit" style="display: none;">
-            <form method="post" action="{% url 'profile-update' %}" enctype="multipart/form-data">
-                {% csrf_token %}
-                <input type="file" name="avatar">
-                <button type="submit">Зберегти</button>
-                <button type="button" onclick="toggleEdit('avatar')">Скасувати</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Пошта -->
-    <div class="profile-field">
-        <span id="email-display">
-            <h3>Пошта: {{ profile_user.email }}</h3>
-            {% if request.user == profile_user or request.user.is_admin %}
-                <button onclick="toggleEdit('email')" class="edit-button">Змінити</button>
-            {% endif %}
-        </span>
-        
-        <div id="email-edit" style="display: none;">
-            <form method="post" action="{% url 'profile-update' %}">
-                {% csrf_token %}
-                <input type="email" name="email" value="{{ profile_user.email }}" placeholder="Email">
-                <button type="submit">Зберегти</button>
-                <button type="button" onclick="toggleEdit('email')">Скасувати</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Телефон -->
-    <div class="profile-field">
-        <span id="phone-display">
-            <h3>Телефон: {{ profile_user.phone_number }}</h3>
-            {% if request.user == profile_user or request.user.is_admin %}
-                <button onclick="toggleEdit('phone')" class="edit-button">Змінити</button>
-            {% endif %}
-        </span>
-        
-        <div id="phone-edit" style="display: none;">
-            <form method="post" action="{% url 'profile-update' %}">
-                {% csrf_token %}
-                <input type="text" name="phone_number" value="{{ profile_user.phone_number }}" placeholder="Телефон">
-                <button type="submit">Зберегти</button>
-                <button type="button" onclick="toggleEdit('phone')">Скасувати</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Опис -->
-    <div class="profile-field">
-        <span id="description-display">
-            <p>{{ profile_user.description }}</p>
-            {% if request.user == profile_user or request.user.is_admin %}
-                <button onclick="toggleEdit('description')" class="edit-button">Змінити</button>
-            {% endif %}
-        </span>
-        
-        <div id="description-edit" style="display: none;">
-            <form method="post" action="{% url 'profile-update' %}">
-                {% csrf_token %}
-                <textarea name="description" placeholder="Опис">{{ profile_user.description }}</textarea>
-                <button type="submit">Зберегти</button>
-                <button type="button" onclick="toggleEdit('description')">Скасувати</button>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        function toggleEdit(fieldName) {
-            const displayElement = document.getElementById(fieldName + '-display');
-            const editElement = document.getElementById(fieldName + '-edit');
+        <!-- Права колонка з інформацією -->
+        <div class="profile-info-section">
+            <h2 class="profile-title">Профіль: <span class="profile-username">{{ profile_user.username }}</span></h2>
             
-            if (displayElement.style.display === 'none') {
-                displayElement.style.display = 'block';
-                editElement.style.display = 'none';
-            } else {
-                displayElement.style.display = 'none';
-                editElement.style.display = 'block';
-            }
+            <div class="profile-info-left">
+                <!-- Ім'я та прізвище -->
+                <div class="profile-field">
+                    <span id="name-display">
+                        <h3>{{ profile_user.first_name }} {{ profile_user.last_name }}</h3>
+                        {% if can_edit %}
+                            <button onclick="toggleEdit('name')" class="edit-button">Змінити</button>
+                        {% endif %}
+                    </span>
+                    
+                    <div id="name-edit" style="display: none;">
+                        <form method="post" action="{% url 'profile-update' %}">
+                            {% csrf_token %}
+                            <input type="text" name="first_name" value="{{ profile_user.first_name }}" placeholder="Ім'я">
+                            <input type="text" name="last_name" value="{{ profile_user.last_name }}" placeholder="Прізвище">
+                            <button type="submit" class="edit-button">Зберегти</button>
+                            <button type="button" onclick="toggleEdit('name')" class="edit-button">Скасувати</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Пошта -->
+                <div class="profile-field">
+                    <span id="email-display">
+                        <h3>Пошта: <span class="profile-email">{{ profile_user.email }}</span></h3>
+                        {% if can_edit %}
+                            <button onclick="toggleEdit('email')" class="edit-button">Змінити</button>
+                        {% endif %}
+                    </span>
+                    
+                    <div id="email-edit" style="display: none;">
+                        <form method="post" action="{% url 'profile-update' %}">
+                            {% csrf_token %}
+                            <input type="email" name="email" value="{{ profile_user.email }}" placeholder="Email">
+                            <button type="submit" class="edit-button">Зберегти</button>
+                            <button type="button" onclick="toggleEdit('email')" class="edit-button">Скасувати</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Телефон -->
+                <div class="profile-field">
+                    <span id="phone-display">
+                        <h3>Телефон: <span class="profile-phone">{{ profile_user.phone_number }}</span></h3>
+                        {% if can_edit %}
+                            <button onclick="toggleEdit('phone')" class="edit-button">Змінити</button>
+                        {% endif %}
+                    </span>
+                    
+                    <div id="phone-edit" style="display: none;">
+                        <form method="post" action="{% url 'profile-update' %}">
+                            {% csrf_token %}
+                            <input type="text" name="phone_number" value="{{ profile_user.phone_number }}" placeholder="Телефон">
+                            <button type="submit" class="edit-button">Зберегти</button>
+                            <button type="button" onclick="toggleEdit('phone')" class="edit-button">Скасувати</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Опис тепер буде справа -->
+            <div class="profile-description">
+                <div class="profile-field">
+                    <span id="description-display">
+                        <div class="description-header">
+                            <h3>Опис:</h3>
+                        </div>
+                        <div class="description-content">
+                            <p>{{ profile_user.description }}</p>
+                            {% if can_edit %}
+                                <button onclick="toggleEdit('description')" class="edit-button">Змінити</button>
+                            {% endif %}
+                        </div>
+                    </span>
+                    
+                    <div id="description-edit" style="display: none;">
+                        <form method="post" action="{% url 'profile-update' %}">
+                            {% csrf_token %}
+                            <textarea name="description" placeholder="Опис">{{ profile_user.description }}</textarea>
+                            <button type="submit" class="edit-button">Зберегти</button>
+                            <button type="button" onclick="toggleEdit('description')" class="edit-button">Скасувати</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="profile-tabs">
+    <div class="tabs-header">
+        <button class="tab-button active" onclick="switchTab('topics')">Теми користувача</button>
+        <button class="tab-button" onclick="switchTab('portfolio')">Портфоліо</button>
+    </div>
+    
+    <div id="topics" class="tab-content active">
+        {% for topic in user_topics %}
+            <div class="topic-item">
+                <h3><a href="{% url 'topic-detail' topic.id %}">{{ topic.title }}</a></h3>
+                <p>{{ topic.content|truncatewords:30 }}</p>
+                <span class="topic-date">{{ topic.created_at|date:"d.m.Y" }}</span>
+            </div>
+        {% empty %}
+            <p>Користувач ще не створив жодної теми</p>
+        {% endfor %}
+    </div>
+    
+    <div id="portfolio" class="tab-content">
+        {% if can_edit %}
+            <div class="add-portfolio-button">
+                <button onclick="toggleAddProject()" class="add-button">Додати проект</button>
+            </div>
+            
+            <!-- Форма додавання проекту -->
+            <div id="add-project-form" style="display: none;" class="add-project-form">
+                <form method="post" action="{% url 'portfolio-add' %}" enctype="multipart/form-data" id="portfolio-form">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="title">Назва проекту:</label>
+                        <input type="text" id="title" name="title" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Опис проекту:</label>
+                        <textarea id="description" name="description" rows="4"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="media">Медіафайли:</label>
+                        <input type="file" id="media" name="media" accept="image/*,video/*">
+                        <small>Підтримуються зображення та відео</small>
+                        <div class="media-preview"></div>
+                    </div>
+
+                    <div class="form-buttons">
+                        <button type="submit" class="edit-button">Зберегти</button>
+                        <button type="button" onclick="toggleAddProject()" class="edit-button">Скасувати</button>
+                    </div>
+                </form>
+            </div>
+        {% endif %}
+
+        <!-- Список проектів -->
+        <div class="portfolio-grid">
+            {% for project in portfolio_items %}
+                <div class="portfolio-item">
+                    <h3>{{ project.title }}</h3>
+                    {% if project.media %}
+                        <div class="media-container">
+                            {% with file_ext=project.media.name|lower %}
+                                {% if '.jpg' in file_ext or '.jpeg' in file_ext or '.png' in file_ext %}
+                                    <img src="{{ project.media.url }}" alt="{{ project.title }}">
+                                {% else %}
+                                    <video controls>
+                                        <source src="{{ project.media.url }}" type="video/mp4">
+                                        Ваш браузер не підтримує відео.
+                                    </video>
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+                    {% endif %}
+                    <p>{{ project.description }}</p>
+                    {% if can_edit %}
+                        <div class="project-controls">
+                            <button onclick="editProject({{ project.id }})" class="edit-button">Редагувати</button>
+                            <button onclick="deleteProject({{ project.id }})" class="edit-button">Видалити</button>
+                        </div>
+                    {% endif %}
+                </div>
+            {% empty %}
+                <p>У портфоліо користувача поки немає проектів</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<style>
+.profile-tabs {
+    margin-top: 30px;
+    background: #1E2A38;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.tabs-header {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #2C3E50;
+    padding-bottom: 10px;
+}
+
+.tab-button {
+    background: none;
+    border: none;
+    color: #5D8CB3;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 1em;
+    border-radius: 4px 4px 0 0;
+}
+
+.tab-button:hover {
+    background: #2C3E50;
+}
+
+.tab-button.active {
+    background: #2C3E50;
+    color: #7FA1C1;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.topic-item, .portfolio-item {
+    background: #0E141B;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+}
+
+.topic-item h3 a {
+    color: #7FA1C1;
+    text-decoration: none;
+}
+
+.topic-item h3 a:hover {
+    color: #9FB8D1;
+}
+
+.topic-date {
+    color: #5D8CB3;
+    font-size: 0.9em;
+}
+
+.media-container img, .media-container video {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin: 10px 0;
+}
+</style>
+
+<script>
+    function toggleEdit(fieldName) {
+        const displayElement = document.getElementById(fieldName + '-display');
+        const editElement = document.getElementById(fieldName + '-edit');
+        
+        if (displayElement.style.display === 'none') {
+            displayElement.style.display = 'block';
+            editElement.style.display = 'none';
+        } else {
+            displayElement.style.display = 'none';
+            editElement.style.display = 'block';
         }
-    </script>
+    }
+
+    function switchTab(tabName) {
+        // Приховуємо всі вкладки
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        
+        // Деактивуємо всі кнопки
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.classList.remove('active');
+        });
+        
+        // Показуємо вибрану вкладку
+        document.getElementById(tabName).classList.add('active');
+        
+        // Активуємо відповідну кнопку
+        event.target.classList.add('active');
+    }
+
+    // Додаємо нові функції
+    function toggleAddProject() {
+        const form = document.getElementById('add-project-form');
+        if (form.style.display === 'none' || !form.style.display) {
+            form.style.display = 'block';
+        } else {
+            form.style.display = 'none';
+        }
+    }
+
+    function editProject(projectId) {
+        fetch(`/auth/portfolio/edit/${projectId}/`)
+            .then(response => response.json())
+            .then(data => {
+                const form = document.getElementById('portfolio-form');
+                const title = form.querySelector('#title');
+                const description = form.querySelector('#description');
+                const mediaPreview = form.querySelector('.media-preview');
+
+                // Оновлюємо форму даними проекту
+                title.value = data.title;
+                description.value = data.description;
+
+                // Показуємо попередній перегляд медіа, якщо воно є
+                if (data.media_url) {
+                    const preview = document.createElement('div');
+                    preview.className = 'media-preview';
+                    
+                    if (data.media_url.match(/\.(jpg|jpeg|png|gif)$/i)) {
+                        const img = document.createElement('img');
+                        img.src = data.media_url;
+                        preview.appendChild(img);
+                    } else if (data.media_url.match(/\.(mp4|webm)$/i)) {
+                        const video = document.createElement('video');
+                        video.src = data.media_url;
+                        video.controls = true;
+                        preview.appendChild(video);
+                    }
+
+                    mediaPreview.innerHTML = '';
+                    mediaPreview.appendChild(preview);
+                }
+
+                // Змінюємо форму для режиму редагування
+                form.setAttribute('action', `/auth/portfolio/edit/${projectId}/`);
+                form.querySelector('button[type="submit"]').textContent = 'Оновити';
+                
+                // Показуємо форму
+                document.getElementById('add-project-form').style.display = 'block';
+                
+                // Прокручуємо до форми
+                form.scrollIntoView({ behavior: 'smooth' });
+            });
+    }
+
+    function deleteProject(projectId) {
+        if(confirm('Ви впевнені, що хочете видалити цей проект?')) {
+            fetch(`/auth/portfolio/delete/${projectId}/`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            }).then(response => {
+                if(response.ok) {
+                    window.location.reload();
+                }
+            });
+        }
+    }
+
+    // Оновлений обробник форми
+    document.getElementById('portfolio-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const url = this.getAttribute('action');
+        
+        fetch(url, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                window.location.reload();
+            } else {
+                alert('Помилка при збереженні проекту');
+                console.error(data.errors);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Помилка при збереженні проекту');
+        });
+    });
+
+    // Оновлений обробник для попереднього перегляду файлів
+    document.getElementById('media').addEventListener('change', function(event) {
+        const preview = document.createElement('div');
+        preview.className = 'media-preview';
+        const file = event.target.files[0];
+        
+        if (file) {
+            if (file.type.startsWith('image/')) {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                preview.appendChild(img);
+            } else if (file.type.startsWith('video/')) {
+                const video = document.createElement('video');
+                video.src = URL.createObjectURL(file);
+                video.controls = true;
+                preview.appendChild(video);
+            }
+            
+            const mediaPreview = this.parentElement.querySelector('.media-preview');
+            mediaPreview.innerHTML = '';
+            mediaPreview.appendChild(preview);
+        }
+    });
+</script>
 {% endblock %}
