@@ -25,7 +25,6 @@ urlpatterns = [
     path('auth/', include('auth_sys.urls')),
     path('', index, name='index'),  # Главная страница
     path('forum/', include('forum_system.urls')),  # Остальные маршруты форума
-    path('portfolio/', include('portfolio_system.urls')),
     path("events/", include('events_system.urls')),
     path("daily/", include('daily_system.urls')),
     path("gallery/", include('gallery_system.urls')),

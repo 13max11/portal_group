@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'daily_system',
     'events_system',
     'forum_system',
-    'portfolio_system',
     'survey_system',
     'gallery_system',
 ]

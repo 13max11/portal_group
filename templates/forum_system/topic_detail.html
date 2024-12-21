@@ -36,7 +36,7 @@
             <h1 class="topics-title">{{ topic.title }}</h1>
             <p class="topics-description">{{ topic.content|linebreaks }}</p>
             {% if topic.img %}
-                <img src="{{topic.img.url}}" alt="users image">
+                <img src="{{topic.img.url}}" alt="users image" width="100%" style="border-radius: 10px;">
             {% endif %}
         </div>
     </div>
